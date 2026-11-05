@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../core/assets.dart';
-import '../../core/figma.dart';
-import '../../core/theme/app_colors.dart';
-import '../../widgets/fig_widgets.dart';
+import '../../core/theme/theme.dart';
+import '../../widgets/widgets.dart';
 
 /// Shared Figma layout for Forgot / Verify / Reset / Success:
 /// pale gradient page, lantern header art, misty footer, and a white
@@ -31,10 +30,10 @@ class AuthCardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: FigCanvas(
+      backgroundColor: AppColors.white,
+      body: DesignCanvas(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFFF8FAF6), Colors.white]),
+          gradient: AppColors.pageGradient,
         ),
         children: [
           Positioned(top: 0, left: 0, width: 392, height: 287, child: Image.asset(AppImages.bgHeader, fit: BoxFit.cover)),
@@ -45,7 +44,7 @@ class AuthCardPage extends StatelessWidget {
             Positioned(
               top: MediaQuery.of(context).padding.top + 16,
               left: 24,
-              child: GestureDetector(onTap: () => Navigator.maybePop(context), child: FigIcon(backIcon, w: 32, h: 32)),
+              child: GestureDetector(onTap: () => Navigator.maybePop(context), child: AppIcon(backIcon, w: 32, h: 32)),
             ),
           Positioned(
             top: cardTop,
@@ -53,7 +52,7 @@ class AuthCardPage extends StatelessWidget {
             right: 24,
             child: Container(
               padding: padding,
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(radius)),
+              decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(radius)),
               child: child,
             ),
           ),
@@ -75,12 +74,12 @@ class AuthTitle extends StatelessWidget {
   Widget build(BuildContext context) => Column(children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
-          child: Text(title, textAlign: TextAlign.center, style: ts(Ff.poppins, 20, w600, AppColors.green800, lh: 40)),
+          child: Text(title, textAlign: TextAlign.center, style: ts(AppFonts.poppins, 20, w600, AppColors.green800, lh: 40)),
         ),
-        const SizedBox(height: 12),
+        AppGap.v12,
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 3.2),
-          child: Text(subtitle, textAlign: TextAlign.center, style: ts(Ff.poppins, subtitleSize, w400, AppColors.textSecondary, lh: subtitleLh)),
+          child: Text(subtitle, textAlign: TextAlign.center, style: ts(AppFonts.poppins, subtitleSize, w400, AppColors.textSecondary, lh: subtitleLh)),
         ),
       ]);
 }
@@ -95,11 +94,11 @@ class AuthAction extends StatelessWidget {
   final TextStyle? textStyle;
 
   @override
-  Widget build(BuildContext context) => FigButton(
+  Widget build(BuildContext context) => AppButton(
         label: label,
         onTap: onTap,
         height: height,
-        textStyle: textStyle ?? ts(Ff.inter, 16, w500, Colors.white, lh: 24),
-        trailing: arrow ? const FigIcon('container_9d18190a', w: 12, h: 12) : null,
+        textStyle: textStyle ?? AppTextStyles.bodyMedium.c(AppColors.white),
+        trailing: arrow ? const AppIcon('container_9d18190a', w: 12, h: 12) : null,
       );
 }

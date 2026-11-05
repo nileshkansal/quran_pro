@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../core/figma.dart';
-import '../../core/theme/app_colors.dart';
 import '../../data/mock_data.dart';
-import '../../widgets/bottom_nav.dart';
-import '../../widgets/verse_card.dart';
 import 'quran_sheets.dart';
+import '../../core/theme/theme.dart';
+import '../../widgets/widgets.dart';
 
 /// Shared reading header: 66px, #f8faf6, back · title · search.
 class ReadingHeader extends StatelessWidget {
@@ -17,12 +15,12 @@ class ReadingHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        color: const Color(0xFFF8FAF6),
+        color: AppColors.surface,
         padding: EdgeInsets.fromLTRB(24, MediaQuery.of(context).padding.top + 10 + 8, 24, 8),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          GestureDetector(onTap: () => Navigator.maybePop(context), child: const FigIcon('button_margin_35cdaed2', w: 32, h: 46)),
-          Text(title, style: ts(Ff.inter, 20, w700, AppColors.green800, lh: 28, ls: -0.5)),
-          GestureDetector(onTap: onSearch, child: const FigIcon('button_margin_437cb4d7', w: 32, h: 34)),
+          GestureDetector(onTap: () => Navigator.maybePop(context), child: const AppIcon('button_margin_35cdaed2', w: 32, h: 46)),
+          Text(title, style: AppTextStyles.titleTight),
+          GestureDetector(onTap: onSearch, child: const AppIcon('button_margin_437cb4d7', w: 32, h: 34)),
         ]),
       );
 }
@@ -85,7 +83,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF6),
+      backgroundColor: AppColors.surface,
       bottomNavigationBar: Column(mainAxisSize: MainAxisSize.min, children: [
         AnimatedSize(
           duration: const Duration(milliseconds: 250),
@@ -106,7 +104,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
       ]),
       body: DecoratedBox(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFFF8FAF6), Colors.white]),
+          gradient: AppColors.pageGradient,
         ),
         child: Column(children: [
           const ReadingHeader(title: 'Al Baqara'),

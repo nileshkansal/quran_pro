@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../core/assets.dart';
-import '../../core/figma.dart';
 import '../../core/routes/app_routes.dart';
-import '../../widgets/fig_widgets.dart';
+import '../../core/theme/theme.dart';
+import '../../widgets/widgets.dart';
 
 /// Figma: "Widget" (6001:2695) + "Add to home screen" sheet (6033:756).
 class WidgetPromoScreen extends StatelessWidget {
@@ -12,14 +12,14 @@ class WidgetPromoScreen extends StatelessWidget {
   Future<void> _addWidget(BuildContext context) async {
     final added = await showModalBottomSheet<bool>(
       context: context,
-      backgroundColor: Colors.transparent,
-      barrierColor: fc(0x000000, .3),
+      backgroundColor: AppColors.transparent,
+      barrierColor: AppColors.pureBlack.o(.3),
       isScrollControlled: true,
       builder: (ctx) => const _AddToHomeSheet(),
     );
     if (!context.mounted) return;
     if (added == true) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Widget added to your home screen')));
+      showAppSnackBar(context, 'Widget added to your home screen');
     }
     Navigator.of(context).pushNamed(AppRoutes.readingSetup);
   }
@@ -28,9 +28,9 @@ class WidgetPromoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final top = MediaQuery.of(context).padding.top;
     return Scaffold(
-      backgroundColor: const Color(0xFFFEFBF4),
-      body: FigCanvas(
-        background: const Color(0xFFFEFBF4),
+      backgroundColor: AppColors.cream,
+      body: DesignCanvas(
+        background: AppColors.cream,
         children: [
           Positioned(top: 0, left: -1, width: 391, height: 519 + top, child: Image.asset(AppImages.widgetBg, fit: BoxFit.fill)),
           Positioned(
@@ -38,12 +38,12 @@ class WidgetPromoScreen extends StatelessWidget {
             left: 0,
             right: 0,
             height: 158 + top,
-            child: const DecoratedBox(
+            child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Color(0xFFFEFBF6), Color(0x00FEFAF6)],
+                  colors: [AppColors.cream, AppColors.cream.o(0)],
                 ),
               ),
             ),
@@ -55,20 +55,20 @@ class WidgetPromoScreen extends StatelessWidget {
             right: 24,
             height: 62,
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              GestureDetector(onTap: () => Navigator.maybePop(context), child: const FigIcon('button_margin_35cdaed2', w: 32, h: 46)),
-              Text('Widget', style: ts(Ff.inter, 20, w700, const Color(0xFF003B29), lh: 28, ls: -0.5)),
-              const FigIcon('button_margin_437cb4d7', w: 32, h: 34),
+              GestureDetector(onTap: () => Navigator.maybePop(context), child: const AppIcon('button_margin_35cdaed2', w: 32, h: 46)),
+              Text('Widget', style: AppTextStyles.titleTight),
+              const AppIcon('button_margin_437cb4d7', w: 32, h: 34),
             ]),
           ),
-          FigCenter(
+          CanvasCenter(
             top: top + 95,
             child: SizedBox(
               width: 183,
               child: Column(children: [
                 const Logo.icon(width: 75.9),
-                const SizedBox(height: 20),
+                AppGap.v20,
                 Text('Motivation on Your Home Screen',
-                    textAlign: TextAlign.center, style: ts(Ff.poppins, 18, w600, const Color(0xFF03261C), lh: 27)),
+                    textAlign: TextAlign.center, style: ts(AppFonts.poppins, 18, w600, AppColors.green900, lh: 27)),
               ]),
             ),
           ),
@@ -86,11 +86,11 @@ class WidgetPromoScreen extends StatelessWidget {
             bottom: 61,
             left: 36,
             right: 32,
-            child: FigButton(
+            child: AppButton(
               label: 'Add Widget',
               onTap: () => _addWidget(context),
-              trailing: FigButton.arrowWhite,
-              textStyle: ts(Ff.inter, 16, w500, Colors.white, lh: 28, ls: -0.2),
+              trailing: AppButton.arrowWhite,
+              textStyle: AppTextStyles.button,
             ),
           ),
           Positioned(
@@ -98,9 +98,9 @@ class WidgetPromoScreen extends StatelessWidget {
             left: 0,
             right: 0,
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const FigIcon('gift_305e1646', w: 18, h: 18),
-              const SizedBox(width: 6),
-              Text('A little reminder, every time you unlock', style: ts(Ff.inter, 11, w400, const Color(0xFF78716C), lh: 13.8)),
+              const AppIcon('gift_305e1646', w: 18, h: 18),
+              AppGap.h6,
+              Text('A little reminder, every time you unlock', style: ts(AppFonts.inter, 11, w400, AppColors.stone500, lh: 13.8)),
             ]),
           ),
         ],
@@ -114,18 +114,18 @@ class _AddToHomeSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final btn = ts(Ff.nunito, 12, w700, const Color(0xFF191A1B), lh: 16);
+    final btn = ts(AppFonts.nunito, 12, w700, AppColors.textPrimary, lh: 16);
     return SafeArea(
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 18.5),
         padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
-          border: Border.all(color: fc(0xFFFFFF, .8)),
+          border: Border.all(color: AppColors.white.o(.8)),
           gradient: const LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFFFBFDFC), Color(0xFFF7FAF8), Color(0xFFFEFBF4)],
+            colors: [AppColors.background, AppColors.surface, AppColors.cream],
           ),
         ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -133,7 +133,7 @@ class _AddToHomeSheet extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 16),
             child: SizedBox(
               width: double.infinity,
-              child: Text('Add to home screen', style: ts(Ff.nunito, 17, w700, const Color(0xFF1F2937), lh: 25.5, ls: -0.4)),
+              child: Text('Add to home screen', style: ts(AppFonts.nunito, 17, w700, AppColors.gray800, lh: 25.5, ls: -0.4)),
             ),
           ),
           Padding(
@@ -146,9 +146,9 @@ class _AddToHomeSheet extends StatelessWidget {
                   width: 112,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF9814BE),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [fShadow(fc(0x000000, .1), 0, 4, 6, -4), fShadow(fc(0x000000, .1), 0, 10, 15, -3)],
+                    color: AppColors.purple59,
+                    borderRadius: AppRadius.br16,
+                    boxShadow: AppShadows.lg,
                   ),
                   clipBehavior: Clip.antiAlias,
                   child: OverflowBox(
@@ -156,33 +156,33 @@ class _AddToHomeSheet extends StatelessWidget {
                     child: Image.asset(AppImages.widgetDoingGreat, width: 140, height: 80, fit: BoxFit.cover),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text('Doing Great', textAlign: TextAlign.center, style: ts(Ff.nunito, 13, w700, const Color(0xFF1F2937), lh: 19.5, ls: -0.3)),
+                AppGap.v8,
+                Text('Doing Great', textAlign: TextAlign.center, style: ts(AppFonts.nunito, 13, w700, AppColors.gray800, lh: 19.5, ls: -0.3)),
               ]),
             ),
           ),
-          const SizedBox(height: 16),
+          AppGap.v16,
           Row(children: [
             Expanded(
               child: Material(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color: fc(0x191A1B, .2))),
+                color: AppColors.white,
+                shape: RoundedRectangleBorder(borderRadius: AppRadius.br10, side: BorderSide(color: AppColors.textPrimary.o(.2))),
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: AppRadius.br10,
                   onTap: () => Navigator.pop(context, false),
                   child: SizedBox(height: 36, child: Center(child: Text('Cancel', style: btn))),
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            AppGap.h12,
             Expanded(
               child: Material(
-                color: const Color(0xFFBE8C30),
-                borderRadius: BorderRadius.circular(10),
+                color: AppColors.gold53,
+                borderRadius: AppRadius.br10,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: AppRadius.br10,
                   onTap: () => Navigator.pop(context, true),
-                  child: SizedBox(height: 36, child: Center(child: Text('Add', style: btn.copyWith(color: Colors.white)))),
+                  child: SizedBox(height: 36, child: Center(child: Text('Add', style: btn.copyWith(color: AppColors.white)))),
                 ),
               ),
             ),

@@ -4,44 +4,18 @@ import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
 
-import '../../core/figma.dart';
 import '../../core/state/app_state.dart';
-import '../../core/theme/app_colors.dart';
 import '../../core/utils/hijri.dart';
 import '../../data/mock_data.dart';
-import '../../widgets/bottom_nav.dart';
-import '../../widgets/fig_widgets.dart';
+import '../../core/theme/theme.dart';
+import '../../widgets/widgets.dart';
+import '../../core/assets.dart';
 
 /// Barrier used by the Home overlays: #03261c @ 60% with 4px backdrop blur.
-Widget _blurBarrier() => BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-      child: Container(color: fc(0x03261C, .6)),
-    );
-
-Future<T?> _figSheet<T>(BuildContext context, WidgetBuilder builder) {
-  return showGeneralDialog<T>(
-    context: context,
-    barrierDismissible: true,
-    barrierLabel: 'close',
-    barrierColor: Colors.transparent,
-    transitionDuration: const Duration(milliseconds: 320),
-    pageBuilder: (ctx, a, _) => Stack(children: [
-      Positioned.fill(child: GestureDetector(onTap: () => Navigator.pop(ctx), child: FadeTransition(opacity: a, child: _blurBarrier()))),
-      Align(
-        alignment: Alignment.bottomCenter,
-        child: SlideTransition(
-          position: Tween(begin: const Offset(0, 1), end: Offset.zero).animate(CurvedAnimation(parent: a, curve: Curves.easeOutCubic)),
-          child: Material(type: MaterialType.transparency, child: builder(ctx)),
-        ),
-      ),
-    ]),
-  );
-}
-
 // ───────────────────────────── Qibla ─────────────────────────────
 
 /// Figma: "Qibla Direction" (6001:3218) — 390×548 sheet, top radius 36.
-Future<void> showQiblaSheet(BuildContext context) => _figSheet(context, (_) => const _QiblaSheet());
+Future<void> showQiblaSheet(BuildContext context) => showAppModal(context, child: const _QiblaSheet(), bottom: true, barrier: AppBarrier.greenBlur, duration: const Duration(milliseconds: 320));
 
 class _QiblaSheet extends StatefulWidget {
   const _QiblaSheet();
@@ -67,10 +41,10 @@ class _QiblaSheetState extends State<_QiblaSheet> with SingleTickerProviderState
       width: double.infinity,
       height: 548 + bottom,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(36)),
-        border: Border.all(color: fc(0xE6D39D, .4)),
-        boxShadow: [fShadow(fc(0x000000, .2), 0, -12, 40)],
+        border: Border.all(color: AppColors.gold24.o(.4)),
+        boxShadow: [fShadow(AppColors.pureBlack.o(.2), 0, -12, 40)],
       ),
       child: Stack(children: [
         Positioned(
@@ -80,40 +54,40 @@ class _QiblaSheetState extends State<_QiblaSheet> with SingleTickerProviderState
           child: Center(
             child: Opacity(
               opacity: 0.8,
-              child: Container(width: 44, height: 4, decoration: BoxDecoration(color: const Color(0xFFD6D3D1), borderRadius: BorderRadius.circular(9999))),
+              child: Container(width: 44, height: 4, decoration: const BoxDecoration(color: AppColors.stone300, borderRadius: AppRadius.pill)),
             ),
           ),
         ),
         Positioned(
           top: 17,
           right: 20,
-          child: GestureDetector(onTap: () => Navigator.pop(context), child: const FigIcon('close_button_top_right_1539a3f5', w: 32, h: 32)),
+          child: GestureDetector(onTap: () => Navigator.pop(context), child: const AppIcon('close_button_top_right_1539a3f5', w: 32, h: 32)),
         ),
         Positioned(
           top: 29,
           left: 24,
           right: 24,
           child: Column(children: [
-            const Padding(padding: EdgeInsets.only(bottom: 8), child: FigIcon('small_green_kaaba_quran_badg_7d915f64', w: 36, h: 36)),
-            Text('Qibla Direction', style: ts(Ff.inter, 22, w700, const Color(0xFF064A3A), lh: 30.3, ls: -0.6)),
+            const Padding(padding: EdgeInsets.only(bottom: 8), child: AppIcon('small_green_kaaba_quran_badg_7d915f64', w: 36, h: 36)),
+            Text('Qibla Direction', style: ts(AppFonts.inter, 22, w700, AppColors.green84, lh: 30.3, ls: -0.6)),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 2),
               child: Text('Point your device flat to find the direction of the\nQibla.',
-                  textAlign: TextAlign.center, style: ts(Ff.inter, 12, w500, const Color(0xFF78716C), lh: 19.5)),
+                  textAlign: TextAlign.center, style: ts(AppFonts.inter, 12, w500, AppColors.stone500, lh: 19.5)),
             ),
-            const SizedBox(height: 14),
+            AppGap.v14,
             Container(
               height: 32,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: AppInsets.h16,
               decoration: BoxDecoration(
-                color: const Color(0xFFF9F8F4),
-                border: Border.all(color: const Color(0xFFE7E5E4)),
-                borderRadius: BorderRadius.circular(9999),
+                color: AppColors.surface,
+                border: Border.all(color: AppColors.stone200),
+                borderRadius: AppRadius.pill,
               ),
               child: Row(mainAxisSize: MainAxisSize.min, children: [
-                const FigIcon('container_6c5b5ae7', w: 10.7, h: 13.3),
-                const SizedBox(width: 6),
-                Text(AppState.instance.location, style: ts(Ff.inter, 12, w600, const Color(0xFF292524), lh: 18, ls: -0.3)),
+                const AppIcon('container_6c5b5ae7', w: 10.7, h: 13.3),
+                AppGap.h6,
+                Text(AppState.instance.location, style: ts(AppFonts.inter, 12, w600, AppColors.stone800, lh: 18, ls: -0.3)),
               ]),
             ),
           ]),
@@ -133,28 +107,28 @@ class _QiblaSheetState extends State<_QiblaSheet> with SingleTickerProviderState
                   height: 218,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    boxShadow: [fShadow(fc(0x000000, .1), 0, 8, 10, -6), fShadow(fc(0x000000, .1), 0, 20, 25, -5)],
+                    boxShadow: [fShadow(AppColors.pureBlack.o(.1), 0, 8, 10, -6), fShadow(AppColors.pureBlack.o(.1), 0, 20, 25, -5)],
                   ),
                 ),
                 AnimatedBuilder(
                   animation: _c,
                   builder: (_, child) => Transform.rotate(angle: (Curves.easeInOut.transform(_c.value) - 0.5) * 0.12, child: child),
-                  child: Image.asset('assets/icons/compass_dial.png', width: 218, height: 218),
+                  child: Image.asset(AppIcons.compassDial, width: 218, height: 218),
                 ),
                 Container(
                   width: 116,
                   height: 116,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     shape: BoxShape.circle,
-                    border: Border.all(color: fc(0xE6D39D, .7), width: 3),
+                    border: Border.all(color: AppColors.gold24.o(.7), width: 3),
                   ),
                   child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    const FigIcon('kaaba_vector_graphic_2d3107ab', w: 32, h: 32),
-                    const SizedBox(height: 2),
-                    Text('299°', style: ts(Ff.inter, 18, w700, const Color(0xFF064A3A), lh: 18, ls: -0.4)),
+                    const AppIcon('kaaba_vector_graphic_2d3107ab', w: 32, h: 32),
+                    AppGap.v2,
+                    Text('299°', style: ts(AppFonts.inter, 18, w700, AppColors.green84, lh: 18, ls: -0.4)),
                     const SizedBox(height: 1),
-                    Text('NORTH WEST', style: ts(Ff.inter, 9.5, w600, const Color(0xFF78716C), lh: 9.5, ls: 0.5)),
+                    Text('NORTH WEST', style: ts(AppFonts.inter, 9.5, w600, AppColors.stone500, lh: 9.5, ls: 0.5)),
                   ]),
                 ),
               ]),
@@ -169,21 +143,21 @@ class _QiblaSheetState extends State<_QiblaSheet> with SingleTickerProviderState
             height: 60.1,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFFF9F8F4),
-              border: Border.all(color: fc(0xE7E5E4, .8)),
-              borderRadius: BorderRadius.circular(12),
+              color: AppColors.surface,
+              border: Border.all(color: AppColors.stone200.o(.8)),
+              borderRadius: AppRadius.br12,
             ),
             child: Row(children: [
-              const FigIcon('background_border_f0bdce72', w: 32, h: 32),
-              const SizedBox(width: 12),
+              const AppIcon('background_border_f0bdce72', w: 32, h: 32),
+              AppGap.h12,
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Text('Keep your phone flat', style: ts(Ff.inter, 12.5, w700, const Color(0xFF292524), lh: 15.6)),
+                  Text('Keep your phone flat', style: ts(AppFonts.inter, 12.5, w700, AppColors.stone800, lh: 15.6)),
                   const SizedBox(height: 1.6),
-                  Text('For more accurate results', style: ts(Ff.inter, 11, w500, const Color(0xFF78716C), lh: 16.5)),
+                  Text('For more accurate results', style: ts(AppFonts.inter, 11, w500, AppColors.stone500, lh: 16.5)),
                 ]),
               ),
-              const FigIcon('margin_2c7a440d', w: 32.5, h: 21.8),
+              const AppIcon('margin_2c7a440d', w: 32.5, h: 21.8),
             ]),
           ),
         ),
@@ -192,7 +166,7 @@ class _QiblaSheetState extends State<_QiblaSheet> with SingleTickerProviderState
           left: 0,
           right: 0,
           child: Center(
-            child: Container(width: 128, height: 4, decoration: BoxDecoration(color: const Color(0xFF292524), borderRadius: BorderRadius.circular(9999))),
+            child: Container(width: 128, height: 4, decoration: const BoxDecoration(color: AppColors.stone800, borderRadius: AppRadius.pill)),
           ),
         ),
       ]),
@@ -203,7 +177,7 @@ class _QiblaSheetState extends State<_QiblaSheet> with SingleTickerProviderState
 // ─────────────────────────── Prayer times ───────────────────────────
 
 /// Figma: "Prayer Times select time" (6001:3502) and "select Date" (6001:3845).
-Future<void> showPrayerTimesSheet(BuildContext context) => _figSheet(context, (_) => const _PrayerTimesSheet());
+Future<void> showPrayerTimesSheet(BuildContext context) => showAppModal(context, child: const _PrayerTimesSheet(), bottom: true, barrier: AppBarrier.greenBlur, duration: const Duration(milliseconds: 320));
 
 class _PrayerTimesSheet extends StatefulWidget {
   const _PrayerTimesSheet();
@@ -217,7 +191,7 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
   DateTime _selected = DateTime.now();
   late DateTime _month = DateTime(_selected.year, _selected.month);
 
-  BoxDecoration get _white => BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12));
+  BoxDecoration get _white => const BoxDecoration(color: AppColors.white, borderRadius: AppRadius.br12);
 
   @override
   Widget build(BuildContext context) {
@@ -227,9 +201,9 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
     return Container(
       height: MediaQuery.of(context).size.height - top - 64,
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAF6),
+        color: AppColors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(36)),
-        boxShadow: [fShadow(fc(0x000000, .2), 0, 25, 50, -12)],
+        boxShadow: [fShadow(AppColors.pureBlack.o(.2), 0, 25, 50, -12)],
       ),
       child: ListView(
         padding: EdgeInsets.fromLTRB(24, 12, 24, 32 + MediaQuery.of(context).padding.bottom),
@@ -238,16 +212,16 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
           SizedBox(
             height: 18,
             child: Stack(clipBehavior: Clip.none, alignment: Alignment.topCenter, children: [
-              Container(width: 48, height: 6, decoration: BoxDecoration(color: AppColors.outline, borderRadius: BorderRadius.circular(9999))),
+              Container(width: 48, height: 6, decoration: const BoxDecoration(color: AppColors.outline, borderRadius: AppRadius.pill)),
               Positioned(
                 right: 0,
                 top: -7,
-                child: GestureDetector(onTap: () => Navigator.pop(context), child: const FigIcon('button_aabf7c08', w: 36, h: 36)),
+                child: GestureDetector(onTap: () => Navigator.pop(context), child: const AppIcon('button_aabf7c08', w: 36, h: 36)),
               ),
             ]),
           ),
-          const SizedBox(height: 24),
-          Center(child: Text('Prayer Times', style: ts(Ff.inter, 24, w600, AppColors.green800, lh: 32, ls: -0.5))),
+          AppGap.v24,
+          Center(child: Text('Prayer Times', style: ts(AppFonts.inter, 24, w600, AppColors.green800, lh: 32, ls: -0.5))),
           const SizedBox(height: 9),
           GestureDetector(
             onTap: () async {
@@ -256,13 +230,13 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
             },
             child: Container(
               height: 64,
-              padding: const EdgeInsets.all(16),
+              padding: AppInsets.all16,
               decoration: _white,
               child: Row(children: [
-                const FigIcon('container_7c8958dd', w: 13.3, h: 16.7),
-                const SizedBox(width: 12),
-                Expanded(child: Text(s.location, style: ts(Ff.inter, 16, w500, AppColors.textPrimary, lh: 24))),
-                const FigIcon('button_423a0953', w: 32, h: 32),
+                const AppIcon('container_7c8958dd', w: 13.3, h: 16.7),
+                AppGap.h12,
+                Expanded(child: Text(s.location, style: AppTextStyles.bodyMedium)),
+                const AppIcon('button_423a0953', w: 32, h: 32),
               ]),
             ),
           ),
@@ -271,41 +245,41 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
             onTap: () => setState(() => _calendar = !_calendar),
             child: Container(
               height: 72,
-              padding: const EdgeInsets.all(16),
+              padding: AppInsets.all16,
               decoration: _white,
               child: Row(children: [
-                const FigIcon('container_67b78b7a', w: 15, h: 16.7),
-                const SizedBox(width: 12),
+                const AppIcon('container_67b78b7a', w: 15, h: 16.7),
+                AppGap.h12,
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(hijri.toString(), style: ts(Ff.inter, 16, w500, AppColors.textPrimary, lh: 24)),
-                    Text(formatLongDate(_selected), style: ts(Ff.inter, 12, w400, AppColors.textSecondary, lh: 16, ls: 0.6)),
+                    Text(hijri.toString(), style: AppTextStyles.bodyMedium),
+                    Text(formatLongDate(_selected), style: AppTextStyles.labelRegular),
                   ]),
                 ),
                 AnimatedRotation(
                   turns: _calendar ? 0.25 : 0,
                   duration: const Duration(milliseconds: 200),
-                  child: const FigIcon('container_4a7e8d26', w: 6.2, h: 10),
+                  child: const AppIcon('container_4a7e8d26', w: 6.2, h: 10),
                 ),
               ]),
             ),
           ),
-          const SizedBox(height: 24),
+          AppGap.v24,
           if (_calendar) ...[
             _notifRow(true),
-            const SizedBox(height: 24),
+            AppGap.v24,
             _calendarCard(),
           ] else ...[
             _nextPrayer(),
-            const SizedBox(height: 24),
+            AppGap.v24,
             _lastThird(),
-            const SizedBox(height: 24),
+            AppGap.v24,
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: AppInsets.all8,
               decoration: _white,
               child: Column(children: [for (final p in kPrayerTimes) _PrayerRow(p, current: p.name == 'Dhuhr')]),
             ),
-            const SizedBox(height: 24),
+            AppGap.v24,
             _notifRow(false),
           ],
         ],
@@ -322,8 +296,8 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
               height: 10,
               decoration: BoxDecoration(shape: BoxShape.circle, gradient: green ? null : AppColors.goldGradient, color: green ? AppColors.green500 : null),
             ),
-            const SizedBox(width: 8),
-            Text('Notifications are ON', style: ts(Ff.inter, 16, w500, AppColors.textPrimary, lh: 24)),
+            AppGap.h8,
+            Text('Notifications are ON', style: AppTextStyles.bodyMedium),
           ]),
           GestureDetector(
             onTap: () {
@@ -331,11 +305,11 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
               Navigator.of(context).popUntil((r) => r.isFirst);
             },
             child: Row(children: [
-              FigIcon(green ? 'container_285babb1' : 'container_8d315cbb', w: 16.8, h: 16.7),
-              const SizedBox(width: 6),
+              AppIcon(green ? 'container_285babb1' : 'container_8d315cbb', w: 16.8, h: 16.7),
+              AppGap.h6,
               green
-                  ? Text('Adjust in Settings', style: ts(Ff.inter, 16, w500, AppColors.green500, lh: 24))
-                  : GradientText('Adjust in Settings', style: ts(Ff.inter, 16, w500, Colors.white, lh: 24), gradient: AppColors.goldGradient),
+                  ? Text('Adjust in Settings', style: AppTextStyles.bodyMedium.c(AppColors.green500))
+                  : GradientText('Adjust in Settings', style: AppTextStyles.bodyMedium.c(AppColors.white), gradient: AppColors.goldGradient),
             ]),
           ),
         ]),
@@ -345,35 +319,35 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
         height: 140,
         decoration: BoxDecoration(
           color: AppColors.green700,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [fShadow(fc(0x000000, .1), 0, 2, 4, -2), fShadow(fc(0x000000, .1), 0, 4, 6, -1)],
+          borderRadius: AppRadius.br12,
+          boxShadow: AppShadows.md,
         ),
         clipBehavior: Clip.antiAlias,
         child: Stack(children: [
-          Positioned(left: 212, top: 26.3, child: Opacity(opacity: 0.1, child: Image.asset('assets/icons/prayer_mosque_deco.png', width: 140, height: 123.7))),
+          Positioned(left: 212, top: 26.3, child: Opacity(opacity: 0.1, child: Image.asset(AppIcons.prayerMosqueDeco, width: 140, height: 123.7))),
           Padding(
-            padding: const EdgeInsets.all(24),
+            padding: AppInsets.all24,
             child: Column(children: [
               SizedBox(
                 height: 60,
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('NEXT PRAYER', style: ts(Ff.inter, 12, w400, AppColors.goldSoft, lh: 16, ls: 0.6)),
-                    const SizedBox(height: 4),
-                    Text('Asr', style: ts(Ff.inter, 30, w400, Colors.white, lh: 36)),
+                    Text('NEXT PRAYER', style: AppTextStyles.labelRegular.c(AppColors.goldSoft)),
+                    AppGap.v4,
+                    Text('Asr', style: ts(AppFonts.inter, 30, w400, AppColors.white, lh: 36)),
                   ]),
                   Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                    Text('03:58 PM', style: ts(Ff.inter, 24, w400, Colors.white, lh: 32)),
-                    const SizedBox(height: 4),
+                    Text('03:58 PM', style: ts(AppFonts.inter, 24, w400, AppColors.white, lh: 32)),
+                    AppGap.v4,
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(9999),
+                      borderRadius: AppRadius.pill,
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
                         child: Container(
                           height: 24,
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                          color: fc(0xF8FAF6, .1),
-                          child: Text('In 2h 17m', style: ts(Ff.inter, 12, w400, AppColors.goldSoft, lh: 16, ls: 0.6)),
+                          color: AppColors.surface.o(.1),
+                          child: Text('In 2h 17m', style: AppTextStyles.labelRegular.c(AppColors.goldSoft)),
                         ),
                       ),
                     ),
@@ -383,11 +357,11 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
               const SizedBox(height: 16 + 8),
               Container(
                 height: 8,
-                decoration: BoxDecoration(color: fc(0xF8FAF6, .2), borderRadius: BorderRadius.circular(9999)),
+                decoration: BoxDecoration(color: AppColors.surface.o(.2), borderRadius: AppRadius.pill),
                 alignment: Alignment.centerLeft,
                 child: FractionallySizedBox(
                   widthFactor: 191.1 / 294,
-                  child: Container(decoration: BoxDecoration(color: AppColors.goldSoft, borderRadius: BorderRadius.circular(9999))),
+                  child: Container(decoration: const BoxDecoration(color: AppColors.goldSoft, borderRadius: AppRadius.pill)),
                 ),
               ),
             ]),
@@ -397,27 +371,27 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
 
   Widget _lastThird() => Container(
         height: 104,
-        padding: const EdgeInsets.all(20),
+        padding: AppInsets.all20,
         decoration: BoxDecoration(
           gradient: AppColors.goldGradient,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [fShadow(fc(0x000000, .1), 0, 2, 4, -2), fShadow(fc(0x000000, .1), 0, 4, 6, -1)],
+          borderRadius: AppRadius.br12,
+          boxShadow: AppShadows.md,
         ),
         child: Row(children: [
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
               Row(children: [
-                const FigIcon('container_77b8f4cb', w: 11.3, h: 15),
-                const SizedBox(width: 8),
-                Text('LAST THIRD OF THE NIGHT', style: ts(Ff.inter, 12, w400, Colors.white, lh: 16, ls: 0.6)),
+                const AppIcon('container_77b8f4cb', w: 11.3, h: 15),
+                AppGap.h8,
+                Text('LAST THIRD OF THE NIGHT', style: AppTextStyles.labelRegular.c(AppColors.white)),
               ]),
-              const SizedBox(height: 4),
-              Text('Best time for Tahajjud & Du\'a', style: ts(Ff.inter, 16, w500, Colors.black, lh: 24)),
-              const SizedBox(height: 4),
-              Text('01:27 AM – 04:50 AM', style: ts(Ff.inter, 12, w400, Colors.white, lh: 16, ls: 0.6)),
+              AppGap.v4,
+              Text('Best time for Tahajjud & Du\'a', style: AppTextStyles.bodyMedium.c(AppColors.pureBlack)),
+              AppGap.v4,
+              Text('01:27 AM – 04:50 AM', style: AppTextStyles.labelRegular.c(AppColors.white)),
             ]),
           ),
-          const FigIcon('background_9be5b1ba', w: 48, h: 48),
+          const AppIcon('background_9be5b1ba', w: 48, h: 48),
         ]),
       );
 
@@ -433,40 +407,40 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
     final cells = lead + daysInMonth;
     final rows = (cells / 7).ceil();
     return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(32), bottom: Radius.circular(12))),
+      padding: AppInsets.all24,
+      decoration: const BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(32), bottom: Radius.circular(12))),
       child: Column(children: [
-        Container(width: 48, height: 4, decoration: BoxDecoration(color: AppColors.divider, borderRadius: BorderRadius.circular(9999))),
-        const SizedBox(height: 16),
+        Container(width: 48, height: 4, decoration: const BoxDecoration(color: AppColors.divider, borderRadius: AppRadius.pill)),
+        AppGap.v16,
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: AppInsets.v8,
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             GestureDetector(
               onTap: () => setState(() => _month = DateTime(_month.year, _month.month - 1)),
-              child: const FigIcon('button_8f823ab2', w: 28.4, h: 32),
+              child: const AppIcon('button_8f823ab2', w: 28.4, h: 32),
             ),
             SizedBox(
               width: 195,
               child: Column(children: [
-                Text('${kMonths[_month.month - 1]} ${_month.year}', style: ts(Ff.inter, 18, w600, AppColors.green800, lh: 28)),
-                Text(hijriRange, textAlign: TextAlign.center, style: ts(Ff.inter, 12, w400, const Color(0xFF5F4504), lh: 16, ls: 0.6)),
+                Text('${kMonths[_month.month - 1]} ${_month.year}', style: ts(AppFonts.inter, 18, w600, AppColors.green800, lh: 28)),
+                Text(hijriRange, textAlign: TextAlign.center, style: AppTextStyles.labelRegular.c(AppColors.gold81)),
               ]),
             ),
             GestureDetector(
               onTap: () => setState(() => _month = DateTime(_month.year, _month.month + 1)),
-              child: const FigIcon('button_9b857998', w: 28.4, h: 32),
+              child: const AppIcon('button_9b857998', w: 28.4, h: 32),
             ),
           ]),
         ),
-        const SizedBox(height: 16),
+        AppGap.v16,
         SizedBox(
           height: 24,
           child: Row(children: [
             for (final d in const ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
-              Expanded(child: Center(child: Text(d, style: ts(Ff.inter, 12, w600, AppColors.green800, lh: 16, ls: 0.6)))),
+              Expanded(child: Center(child: Text(d, style: ts(AppFonts.inter, 12, w600, AppColors.green800, lh: 16, ls: 0.6)))),
           ]),
         ),
-        const SizedBox(height: 16),
+        AppGap.v16,
         for (var r = 0; r < rows; r++)
           Padding(
             padding: const EdgeInsets.only(bottom: 2),
@@ -475,39 +449,39 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
                 Expanded(child: _dayCell(r * 7 + c - lead + 1, daysInMonth, today)),
             ]),
           ),
-        const SizedBox(height: 16),
-        Container(height: 1, color: const Color(0xFFE6E9E5)),
-        const SizedBox(height: 16),
+        AppGap.v16,
+        Container(height: 1, color: AppColors.grey09),
+        AppGap.v16,
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: AppInsets.v8,
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text("Today's Corresponding Date", style: ts(Ff.inter, 12, w400, AppColors.textSecondary, lh: 16, ls: 0.6)),
+              Text("Today's Corresponding Date", style: AppTextStyles.labelRegular),
               Container(
                 height: 20,
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(color: fc(0xA4F3CC, .2), borderRadius: BorderRadius.circular(9999)),
+                decoration: BoxDecoration(color: AppColors.green20.o(.2), borderRadius: AppRadius.pill),
                 child: Row(children: [
                   Container(width: 6, height: 6, decoration: const BoxDecoration(color: AppColors.green500, shape: BoxShape.circle)),
-                  const SizedBox(width: 6),
-                  Text('Active', style: ts(Ff.inter, 12, w400, AppColors.green500, lh: 16)),
+                  AppGap.h6,
+                  Text('Active', style: ts(AppFonts.inter, 12, w400, AppColors.green500, lh: 16)),
                 ]),
               ),
             ]),
-            const SizedBox(height: 4),
-            Text(hSel.toString(), style: ts(Ff.inter, 16, w700, AppColors.green800, lh: 24)),
-            const SizedBox(height: 4),
-            Text(formatLongDate(_selected), style: ts(Ff.inter, 12, w400, AppColors.textSecondary, lh: 16, ls: 0.6)),
+            AppGap.v4,
+            Text(hSel.toString(), style: ts(AppFonts.inter, 16, w700, AppColors.green800, lh: 24)),
+            AppGap.v4,
+            Text(formatLongDate(_selected), style: AppTextStyles.labelRegular),
           ]),
         ),
-        const SizedBox(height: 16),
+        AppGap.v16,
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(border: Border(top: BorderSide(color: fc(0xE6E9E5, .5)))),
+          padding: AppInsets.v12,
+          decoration: BoxDecoration(border: Border(top: BorderSide(color: AppColors.grey09.o(.5)))),
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             _legend(AppColors.green500, 'Hijri Date (Emerald)'),
-            const SizedBox(width: 24),
-            _legend(const Color(0xFF5F4504), 'Gregorian Date (Gold)'),
+            AppGap.h24,
+            _legend(AppColors.gold81, 'Gregorian Date (Gold)'),
           ]),
         ),
       ]),
@@ -516,8 +490,8 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
 
   Widget _legend(Color c, String t) => Row(children: [
         Container(width: 8, height: 8, decoration: BoxDecoration(color: c, shape: BoxShape.circle)),
-        const SizedBox(width: 6),
-        Text(t, style: ts(Ff.inter, 11, w500, AppColors.textSecondary, lh: 16.5)),
+        AppGap.h6,
+        Text(t, style: ts(AppFonts.inter, 11, w500, AppColors.textSecondary, lh: 16.5)),
       ]);
 
   Widget _dayCell(int day, int daysInMonth, DateTime today) {
@@ -538,7 +512,7 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
             borderRadius: BorderRadius.circular(500),
             border: isToday && !sel ? Border.all(color: AppColors.gold) : null,
           ),
-          child: Text('$day', style: ts(Ff.montserrat, 14, w500, sel ? Colors.white : const Color(0xFF1C252E), lh: 22)),
+          child: Text('$day', style: ts(AppFonts.montserrat, 14, w500, sel ? AppColors.white : AppColors.blue85, lh: 22)),
         ),
       ),
     );
@@ -577,23 +551,23 @@ class _PrayerRowState extends State<_PrayerRow> {
     return Container(
       height: 52,
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: cur ? fc(0xA4F3CC, .2) : null, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: cur ? AppColors.green20.o(.2) : null, borderRadius: AppRadius.br8),
       child: Row(children: [
-        SizedBox(width: 22, child: Center(child: FigIcon(icon, w: iw, h: ih))),
-        const SizedBox(width: 12),
-        Expanded(child: Text(p.name, style: ts(Ff.inter, 16, cur ? w600 : w400, nameColor, lh: 24))),
+        SizedBox(width: 22, child: Center(child: AppIcon(icon, w: iw, h: ih))),
+        AppGap.h12,
+        Expanded(child: Text(p.name, style: ts(AppFonts.inter, 16, cur ? w600 : w400, nameColor, lh: 24))),
         Text(
           p.time,
-          style: p.serif ? ts(Ff.amiri, 16, w400, AppColors.textSecondary, lh: 24) : ts(Ff.inter, 16, w600, cur ? AppColors.green800 : AppColors.textPrimary, lh: 24),
+          style: p.serif ? ts(AppFonts.amiri, 16, w400, AppColors.textSecondary, lh: 24) : ts(AppFonts.inter, 16, w600, cur ? AppColors.green800 : AppColors.textPrimary, lh: 24),
         ),
-        const SizedBox(width: 16),
+        AppGap.h16,
         GestureDetector(
           onTap: p.notify ? () => setState(() => _on = !_on) : null,
           child: SizedBox(
             width: 18.2,
             child: p.notify
-                ? Opacity(opacity: _on ? 1 : 0.3, child: const FigIcon('container_ed3c1858', w: 15, h: 14.6))
-                : const FigIcon('container_0782c31c', w: 18.2, h: 0.9),
+                ? Opacity(opacity: _on ? 1 : 0.3, child: const AppIcon('container_ed3c1858', w: 15, h: 14.6))
+                : const AppIcon('container_0782c31c', w: 18.2, h: 0.9),
           ),
         ),
       ]),
@@ -604,24 +578,8 @@ class _PrayerRowState extends State<_PrayerRow> {
 // ─────────────────────────── Choose location ───────────────────────────
 
 /// Figma: "Choose Location" (6001:4185) — floating 356.7-wide card, r32.9.
-Future<void> showChooseLocationSheet(BuildContext context) {
-  return showGeneralDialog(
-    context: context,
-    barrierDismissible: true,
-    barrierLabel: 'close',
-    barrierColor: Colors.transparent,
-    transitionDuration: const Duration(milliseconds: 260),
-    pageBuilder: (ctx, a, _) => Stack(children: [
-      Positioned.fill(child: GestureDetector(onTap: () => Navigator.pop(ctx), child: FadeTransition(opacity: a, child: _blurBarrier()))),
-      Center(
-        child: ScaleTransition(
-          scale: Tween(begin: 0.95, end: 1.0).animate(CurvedAnimation(parent: a, curve: Curves.easeOut)),
-          child: FadeTransition(opacity: a, child: const Material(type: MaterialType.transparency, child: _ChooseLocationCard())),
-        ),
-      ),
-    ]),
-  );
-}
+Future<void> showChooseLocationSheet(BuildContext context) =>
+    showAppModal(context, child: const _ChooseLocationCard(), barrier: AppBarrier.greenBlur);
 
 class _ChooseLocationCard extends StatefulWidget {
   const _ChooseLocationCard();
@@ -661,7 +619,7 @@ class _ChooseLocationCardState extends State<_ChooseLocationCard> {
           gradient: on ? AppColors.goldGradient : null,
           border: on ? null : Border.all(color: AppColors.textMuted, width: 1.8),
         ),
-        child: on ? Container(width: 9.1, height: 9.1, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle)) : null,
+        child: on ? Container(width: 9.1, height: 9.1, decoration: const BoxDecoration(color: AppColors.white, shape: BoxShape.circle)) : null,
       );
 
   Widget _optionTitle(String t, bool on, VoidCallback tap) => GestureDetector(
@@ -669,7 +627,7 @@ class _ChooseLocationCardState extends State<_ChooseLocationCard> {
         child: Row(children: [
           _radio(on),
           const SizedBox(width: 11),
-          GradientText(t, style: ts(Ff.inter, 14.6, w500, Colors.white, lh: 22), gradient: AppColors.goldGradient),
+          GradientText(t, style: ts(AppFonts.inter, 14.6, w500, AppColors.white, lh: 22), gradient: AppColors.goldGradient),
         ]),
       );
 
@@ -681,30 +639,30 @@ class _ChooseLocationCardState extends State<_ChooseLocationCard> {
       width: w,
       padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(32.9),
-        boxShadow: [fShadow(fc(0x000000, .2), 0, 22.9, 45.7, -11)],
+        boxShadow: [fShadow(AppColors.pureBlack.o(.2), 0, 22.9, 45.7, -11)],
       ),
       child: SingleChildScrollView(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          const FigIcon('location_icon_d44bc653', w: 65.9, h: 65.9),
+          const AppIcon('location_icon_d44bc653', w: 65.9, h: 65.9),
           const SizedBox(height: 22),
-          Text('Choose Location', style: ts(Ff.inter, 22, w600, AppColors.green800, lh: 29.3, ls: -0.4)),
+          Text('Choose Location', style: ts(AppFonts.inter, 22, w600, AppColors.green800, lh: 29.3, ls: -0.4)),
           const SizedBox(height: 3.7),
           Text('How would you like to set your location\nfor accurate prayer times?',
-              textAlign: TextAlign.center, style: ts(Ff.inter, 12.8, w400, AppColors.textSecondary, lh: 18.3)),
+              textAlign: TextAlign.center, style: ts(AppFonts.inter, 12.8, w400, AppColors.textSecondary, lh: 18.3)),
           const SizedBox(height: 22),
           _optionTitle('Choose Automatically', _auto, () => setState(() => _auto = true)),
           const SizedBox(height: 11),
           Container(
             height: 65.9,
             padding: const EdgeInsets.symmetric(horizontal: 18.3),
-            decoration: BoxDecoration(color: fc(0x91D4B6, .2), borderRadius: BorderRadius.circular(14.6)),
+            decoration: BoxDecoration(color: AppColors.green30.o(.2), borderRadius: BorderRadius.circular(14.6)),
             child: Row(children: [
-              const FigIcon('container_ad0f4161', w: 20, h: 20),
+              const AppIcon('container_ad0f4161', w: 20, h: 20),
               const SizedBox(width: 11),
-              Expanded(child: Text(s.location, style: ts(Ff.inter, 14.6, w400, AppColors.textPrimary, lh: 22))),
-              if (_auto) const FigIcon('container_b6a6528e', w: 18.3, h: 18.3),
+              Expanded(child: Text(s.location, style: ts(AppFonts.inter, 14.6, w400, AppColors.textPrimary, lh: 22))),
+              if (_auto) const AppIcon('container_b6a6528e', w: 18.3, h: 18.3),
             ]),
           ),
           const SizedBox(height: 14.6 + 7.3),
@@ -715,8 +673,8 @@ class _ChooseLocationCardState extends State<_ChooseLocationCard> {
             decoration: BoxDecoration(color: AppColors.surfaceAlt, borderRadius: BorderRadius.circular(14.6)),
             child: Row(children: [
               const SizedBox(width: 17.4),
-              const FigIcon('icon_ebe2a693', w: 16.5, h: 16.5),
-              const SizedBox(width: 10),
+              const AppIcon('icon_ebe2a693', w: 16.5, h: 16.5),
+              AppGap.h10,
               Expanded(
                 child: TextField(
                   controller: _q,
@@ -724,12 +682,12 @@ class _ChooseLocationCardState extends State<_ChooseLocationCard> {
                     if (_auto) setState(() => _auto = false);
                     _search(v);
                   },
-                  style: ts(Ff.inter, 14.6, w400, AppColors.textPrimary),
+                  style: ts(AppFonts.inter, 14.6, w400, AppColors.textPrimary),
                   decoration: InputDecoration(
                     isCollapsed: true,
                     border: InputBorder.none,
                     hintText: 'Type city, state or country',
-                    hintStyle: ts(Ff.inter, 14.6, w400, AppColors.textMuted),
+                    hintStyle: ts(AppFonts.inter, 14.6, w400, AppColors.textMuted),
                   ),
                 ),
               ),
@@ -742,7 +700,7 @@ class _ChooseLocationCardState extends State<_ChooseLocationCard> {
               padding: const EdgeInsets.symmetric(horizontal: 7.3),
               child: SizedBox(
                 width: double.infinity,
-                child: Text('Start typing to see matching cities', style: ts(Ff.inter, 11, w400, AppColors.textMuted, lh: 14.6, ls: 0.5)),
+                child: Text('Start typing to see matching cities', style: ts(AppFonts.inter, 11, w400, AppColors.textMuted, lh: 14.6, ls: 0.5)),
               ),
             )
           else
@@ -756,20 +714,20 @@ class _ChooseLocationCardState extends State<_ChooseLocationCard> {
                   child: Row(children: [
                     _radio(_picked == c),
                     const SizedBox(width: 11),
-                    Expanded(child: Text(c, style: ts(Ff.inter, 14, w400, AppColors.textPrimary, lh: 20))),
+                    Expanded(child: Text(c, style: AppTextStyles.bodySmall.c(AppColors.textPrimary))),
                   ]),
                 ),
               ),
           const SizedBox(height: 7.3),
-          Container(height: 0.9, color: const Color(0xFFE6E9E5)),
+          Container(height: 0.9, color: AppColors.grey09),
           const SizedBox(height: 22 + 3.7),
-          FigButton(
+          AppButton(
             label: 'Save Location',
             height: 58.5,
             gap: 7.3,
-            textStyle: ts(Ff.inter, 14.6, w400, Colors.white, lh: 22),
-            trailing: const FigIcon('container_a12022d6', w: 12.2, h: 12.2),
-            shadow: [fShadow(fc(0x000000, .1), 0, 3.7, 5.5, -3.7), fShadow(fc(0x000000, .1), 0, 9.1, 13.7, -2.7)],
+            textStyle: ts(AppFonts.inter, 14.6, w400, AppColors.white, lh: 22),
+            trailing: const AppIcon('container_a12022d6', w: 12.2, h: 12.2),
+            shadow: [fShadow(AppColors.pureBlack.o(.1), 0, 3.7, 5.5, -3.7), fShadow(AppColors.pureBlack.o(.1), 0, 9.1, 13.7, -2.7)],
             onTap: () {
               s.update(() {
                 if (!_auto && _picked != null) s.location = _picked!;

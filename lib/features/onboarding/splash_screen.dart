@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../core/figma.dart';
 import '../../core/routes/app_routes.dart';
-import '../../widgets/fig_widgets.dart';
+import '../../core/theme/theme.dart';
+import '../../widgets/widgets.dart';
 
 /// Figma: "Splash Screen" (6001:1479)
 class SplashScreen extends StatefulWidget {
@@ -39,23 +39,23 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     final fade = CurvedAnimation(parent: _c, curve: Curves.easeOut);
     return Scaffold(
-      backgroundColor: const Color(0xFFFCFBFA),
+      backgroundColor: AppColors.background,
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: _next,
-        child: FigCanvas(
-          background: const Color(0xFFFCFBFA),
+        child: DesignCanvas(
+          background: AppColors.background,
           children: [
             const Positioned.fill(child: LanternBackdrop()),
             // Logo + tagline group: 273×182 at y 331.1, column gap 19.
-            FigCenter(
+            CanvasCenter(
               top: 331.1,
               child: FadeTransition(
                 opacity: fade,
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   const Logo.splash(width: 153),
                   const SizedBox(height: 19),
-                  Text('RECITE | UNDERSTAND | TRANSFORM', style: ts(Ff.inter, 12, w400, const Color(0xFF0A853A), lsPct: 14)),
+                  Text('RECITE | UNDERSTAND | TRANSFORM', style: ts(AppFonts.inter, 12, w400, AppColors.green72, lsPct: 14)),
                 ]),
               ),
             ),

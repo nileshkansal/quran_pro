@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../core/figma.dart';
 import '../../core/routes/app_routes.dart';
-import '../../core/theme/app_colors.dart';
-import '../../widgets/fig_widgets.dart';
 import 'auth_card_page.dart';
+import '../../core/theme/theme.dart';
+import '../../widgets/widgets.dart';
 
 /// Figma: "Forgot Password - Request (OTP)" (6001:7015)
 class ForgotPasswordScreen extends StatefulWidget {
@@ -29,22 +28,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       cardTop: 259,
       child: Column(children: [
         const AuthTitle('Forgot Password', 'Enter your phone number to receive\na one-time password (OTP) to reset\nyour password.'),
-        const SizedBox(height: 12),
+        AppGap.v12,
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: AppInsets.v12,
           child: Column(children: [
-            FigInput(
+            AppTextField(
               controller: _email,
               height: 49,
               radius: 8,
-              fill: const Color(0xFFF8FAF6),
+              fill: AppColors.surface,
               borderColor: AppColors.divider,
               hint: 'Enter your email',
-              hintStyle: ts(Ff.inter, 16, w400, AppColors.outline),
+              hintStyle: ts(AppFonts.inter, 16, w400, AppColors.outline),
               keyboardType: TextInputType.emailAddress,
-              leading: const FigIcon('container_6ca4db80', w: 36, h: 49),
+              leading: const AppIcon('container_6ca4db80', w: 36, h: 49),
             ),
-            const SizedBox(height: 24),
+            AppGap.v24,
             AuthAction(
               label: 'Send OTP',
               onTap: () => Navigator.of(context).pushNamed(
@@ -54,12 +53,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
           ]),
         ),
-        const SizedBox(height: 12),
+        AppGap.v12,
         GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Padding(
             padding: const EdgeInsets.only(top: 2, bottom: 1),
-            child: Text('Return to Login', style: ts(Ff.inter, 14, w500, AppColors.black, lh: 21)),
+            child: Text('Return to Login', style: ts(AppFonts.inter, 14, w500, AppColors.black, lh: 21)),
           ),
         ),
       ]),

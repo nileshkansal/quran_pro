@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/theme.dart';
+import '../../widgets/widgets.dart';
 
-import '../../core/figma.dart';
-import '../../core/theme/app_colors.dart';
-import '../../widgets/fig_widgets.dart';
 
-TextStyle get _body => ts(Ff.inter, 18, w400, AppColors.textSecondary, lh: 29.3);
-Widget get _rule => Container(height: 1, color: fc(0xBFC9C2, .1));
+TextStyle get _body => ts(AppFonts.inter, 18, w400, AppColors.textSecondary, lh: 29.3);
+Widget get _rule => Container(height: 1, color: AppColors.outline.o(.1));
 
 /// Figma: "Privacy Policy" (6001:1297).
 class PrivacyPolicyScreen extends StatelessWidget {
@@ -26,37 +25,37 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FigSubPage(
+    return AppSubPage(
       title: 'Privacy Policy',
-      titleLs: -0.5,
+      titleStyle: AppTextStyles.titleTight,
       padding: const EdgeInsets.fromLTRB(24, 40, 24, 136),
       children: [
-        const Center(child: Opacity(opacity: .8, child: FigIcon('icon_c0f28894', w: 24, h: 30))),
-        const SizedBox(height: 16),
+        const Center(child: Opacity(opacity: .8, child: AppIcon('icon_c0f28894', w: 24, h: 30))),
+        AppGap.v16,
         Text(
           'We are committed to maintaining the\nsanctity of your digital space. This\npolicy outlines our thoughtful approach\nto your data.',
           textAlign: TextAlign.center,
-          style: ts(Ff.inter, 18, w400, AppColors.textSecondary, lh: 28),
+          style: AppTextStyles.lead,
         ),
-        const SizedBox(height: 40),
+        AppGap.v40,
         Container(
-          padding: const EdgeInsets.all(24),
-          decoration: figCard(radius: 12, border: fc(0xBFC9C2, .1)),
+          padding: AppInsets.all24,
+          decoration: AppDecorations.card(radius: 12, border: AppColors.outline.o(.1)),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             for (final (i, s) in _sections.indexed) ...[
-              if (i > 0) ...[const SizedBox(height: 24), _rule, const SizedBox(height: 24)],
+              if (i > 0) ...[AppGap.v24, _rule, AppGap.v24],
               Row(children: [
-                SizedBox(width: 20, child: Center(child: FigIcon(s.$1, w: s.$2, h: s.$3))),
-                const SizedBox(width: 8),
-                Text(s.$4, style: ts(Ff.inter, 20, w700, AppColors.green800, lh: 28, ls: -0.2)),
+                SizedBox(width: 20, child: Center(child: AppIcon(s.$1, w: s.$2, h: s.$3))),
+                AppGap.h8,
+                Text(s.$4, style: AppTextStyles.title),
               ]),
-              const SizedBox(height: 12),
+              AppGap.v12,
               Text(s.$5, style: _body),
             ],
           ]),
         ),
         const SizedBox(height: 40 + 24),
-        Text('Last updated: October 24, 2023', textAlign: TextAlign.center, style: ts(Ff.inter, 12, w500, AppColors.textMuted, lh: 16, ls: 0.6)),
+        Text('Last updated: October 24, 2023', textAlign: TextAlign.center, style: AppTextStyles.label.c(AppColors.textMuted)),
       ],
     );
   }
@@ -81,57 +80,55 @@ class TermsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FigSubPage(
+    return AppSubPage(
       title: 'Terms & Conditions',
-      titleLs: -0.5,
-      backIcon: 'button_go_back_margin_b2016837',
-      backW: 32,
-      backH: 40,
+      titleStyle: AppTextStyles.titleTight,
+      back: const AppBackButton(icon: 'button_go_back_margin_b2016837', w: 32, h: 40),
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 96 + 40),
       children: [
-        Text('Terms of Service', textAlign: TextAlign.center, style: ts(Ff.inter, 32, w600, AppColors.green800, lh: 56)),
-        const SizedBox(height: 12),
-        Text('Last updated: October 24, 2023', textAlign: TextAlign.center, style: ts(Ff.inter, 16, w400, AppColors.textSecondary, lh: 24)),
+        Text('Terms of Service', textAlign: TextAlign.center, style: ts(AppFonts.inter, 32, w600, AppColors.green800, lh: 56)),
+        AppGap.v12,
+        Text('Last updated: October 24, 2023', textAlign: TextAlign.center, style: AppTextStyles.body),
         const SizedBox(height: 12 + 12),
-        Center(child: Container(width: 96, height: 1, color: fc(0xBFC9C2, .3))),
-        const SizedBox(height: 24),
+        Center(child: Container(width: 96, height: 1, color: AppColors.outline.o(.3))),
+        AppGap.v24,
         Container(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
-          decoration: figCard(radius: 12),
+          decoration: AppDecorations.card(radius: 12),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             for (final (i, s) in _sections.indexed) ...[
-              if (i > 0) ...[const SizedBox(height: 24), _rule, const SizedBox(height: 24)],
-              Text(s.$1, style: ts(Ff.inter, 20, w700, AppColors.green500, lh: 28, ls: -0.2)),
-              const SizedBox(height: 12),
+              if (i > 0) ...[AppGap.v24, _rule, AppGap.v24],
+              Text(s.$1, style: AppTextStyles.title.c(AppColors.green500)),
+              AppGap.v12,
               Text(s.$2, style: _body),
             ],
-            const SizedBox(height: 12),
+            AppGap.v12,
             Container(
               padding: const EdgeInsets.fromLTRB(16, 16, 20, 16),
               decoration: BoxDecoration(
                 color: AppColors.surfaceAlt,
-                border: Border.all(color: fc(0xBFC9C2, .2)),
-                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppColors.outline.o(.2)),
+                borderRadius: AppRadius.br8,
               ),
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const FigIcon('icon_9fbd7377', w: 20, h: 20),
-                const SizedBox(width: 12),
+                const AppIcon('icon_9fbd7377', w: 20, h: 20),
+                AppGap.h12,
                 Expanded(
                   child: Text(
                     'For any legal inquiries or concerns\nregarding these terms, please\ncontact our support team via the\nFeedback section or at\nlegal@quranpro.example.com.',
-                    style: ts(Ff.inter, 12, w500, AppColors.textSecondary, lh: 16, ls: 0.6),
+                    style: AppTextStyles.label,
                   ),
                 ),
               ]),
             ),
-            const SizedBox(height: 24),
+            AppGap.v24,
             Center(
-              child: FigButton(
+              child: AppButton(
                 label: 'I Understand',
                 width: 151.9,
                 height: 40,
-                leading: const FigIcon('container_a4a806a5', w: 15, h: 15),
-                textStyle: ts(Ff.inter, 12, w500, Colors.white, lh: 16, ls: 0.6),
+                leading: const AppIcon('container_a4a806a5', w: 15, h: 15),
+                textStyle: AppTextStyles.label.c(AppColors.white),
                 onTap: () => Navigator.maybePop(context),
               ),
             ),

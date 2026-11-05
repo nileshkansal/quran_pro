@@ -2,11 +2,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../core/figma.dart';
 import '../../core/state/app_state.dart';
 import '../../data/mock_data.dart';
-import '../../widgets/common.dart';
 import 'quran_sheets.dart';
+import '../../core/theme/theme.dart';
+import '../../widgets/widgets.dart';
 
 /// Figma: "Surah Al-Mulk" (6044:2) Mushaf page, with the client's requested
 /// interaction: long-press an ayah → it is highlighted and the
@@ -30,8 +30,8 @@ class _MushafScreenState extends State<MushafScreen> {
     for (final v in kMulkVerses) LongPressGestureRecognizer()..onLongPress = () => _onVerse(v),
   ];
 
-  static const _ink = Color(0xFF0D0C0A);
-  static const _paper = Color(0xFFFFFEFA);
+  static const _ink = AppColors.grey95;
+  static const _paper = AppColors.background;
 
   @override
   void dispose() {
@@ -51,13 +51,13 @@ class _MushafScreenState extends State<MushafScreen> {
   @override
   Widget build(BuildContext context) {
     final size = 16.8 + (AppState.instance.fontScale - 0.5) * 6;
-    final jak = ts(Ff.jakarta, 15, w400, const Color(0xFF374151), lh: 20);
-    final nav = ts(Ff.jakarta, 12, w400, const Color(0xFF57534E), lh: 16);
+    final jak = ts(AppFonts.jakarta, 15, w400, AppColors.gray700, lh: 20);
+    final nav = AppTextStyles.jakartaCaption.c(AppColors.stone600);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: DecoratedBox(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFFF8FAF6), Colors.white]),
+          gradient: AppColors.pageGradient,
         ),
         child: SafeArea(
           bottom: false,
@@ -68,7 +68,7 @@ class _MushafScreenState extends State<MushafScreen> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(8, 0, 20, 0),
                 child: Row(children: [
-                  IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.arrow_back, size: 20, color: Color(0xFF374151))),
+                  IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.arrow_back, size: 20, color: AppColors.gray700)),
                   Text('Surah Al-Mulk', style: jak.copyWith(letterSpacing: 0.4)),
                   const Spacer(),
                   Text('Juz\' 29, Hizb 57', style: jak),
@@ -82,12 +82,12 @@ class _MushafScreenState extends State<MushafScreen> {
                   if (vx.abs() > 200) setState(() => _page += vx > 0 ? 1 : -1);
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  padding: AppInsets.h14,
                   child: Container(
                     padding: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(border: Border.all(color: const Color(0xFF1C1917)), borderRadius: BorderRadius.circular(2)),
+                    decoration: BoxDecoration(border: Border.all(color: AppColors.textPrimary), borderRadius: BorderRadius.circular(2)),
                     child: Container(
-                      decoration: BoxDecoration(color: _paper, border: Border.all(color: const Color(0xFF1C1917)), borderRadius: BorderRadius.circular(2)),
+                      decoration: BoxDecoration(color: _paper, border: Border.all(color: AppColors.textPrimary), borderRadius: BorderRadius.circular(2)),
                       child: ListView(
                         padding: const EdgeInsets.fromLTRB(7, 7, 7, 16),
                         children: [
@@ -97,7 +97,7 @@ class _MushafScreenState extends State<MushafScreen> {
                             child: Text('بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ',
                                 textAlign: TextAlign.center,
                                 textDirection: TextDirection.rtl,
-                                style: ts(Ff.amiriQuran, 25, w400, const Color(0xFF1C1917), lh: 40, ls: 0.6)),
+                                style: ts(AppFonts.amiriQuran, 25, w400, AppColors.textPrimary, lh: 40, ls: 0.6)),
                           ),
                           Text.rich(
                             TextSpan(children: [
@@ -105,7 +105,7 @@ class _MushafScreenState extends State<MushafScreen> {
                                 TextSpan(
                                   text: '${kMulkVerses[i].arabic} ',
                                   recognizer: _press[i],
-                                  style: TextStyle(backgroundColor: _highlight == kMulkVerses[i].number ? fc(0xD4A349, .22) : null),
+                                  style: TextStyle(backgroundColor: _highlight == kMulkVerses[i].number ? AppColors.gold.o(.22) : null),
                                 ),
                                 WidgetSpan(
                                   alignment: PlaceholderAlignment.middle,
@@ -122,11 +122,11 @@ class _MushafScreenState extends State<MushafScreen> {
                             ]),
                             textAlign: TextAlign.justify,
                             textDirection: TextDirection.rtl,
-                            style: ts(Ff.amiriQuran, size, w400, _ink, lh: 32.8 * size / 16.8 + 14, ls: -0.3),
+                            style: ts(AppFonts.amiriQuran, size, w400, _ink, lh: 32.8 * size / 16.8 + 14, ls: -0.3),
                           ),
-                          const SizedBox(height: 12),
+                          AppGap.v12,
                           Text('Long-press an ayah for translation, tafsir and sharing',
-                              textAlign: TextAlign.center, style: ts(Ff.jakarta, 10, w400, const Color(0xFFA8A29E))),
+                              textAlign: TextAlign.center, style: ts(AppFonts.jakarta, 10, w400, AppColors.stone400)),
                         ],
                       ),
                     ),
@@ -137,46 +137,46 @@ class _MushafScreenState extends State<MushafScreen> {
             // Page number footer.
             SizedBox(
               height: 44,
-              child: Center(child: Text('$_page', style: ts(Ff.jakarta, 18, w500, const Color(0xFF44403C), lh: 28, ls: 0.9))),
+              child: Center(child: Text('$_page', style: ts(AppFonts.jakarta, 18, w500, AppColors.stone700, lh: 28, ls: 0.9))),
             ),
             // Minimalist bottom reader nav: 47px.
             Container(
               padding: EdgeInsets.fromLTRB(20, 10, 20, 10 + MediaQuery.of(context).padding.bottom),
               decoration: BoxDecoration(
-                color: fc(0xFAF8F5, .9),
-                border: Border(top: BorderSide(color: fc(0xE7E5E4, .8))),
+                color: AppColors.surface.o(.9),
+                border: Border(top: BorderSide(color: AppColors.stone200.o(.8))),
               ),
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 GestureDetector(
                   onTap: () => setState(() => _page--),
-                  child: Row(children: [const FigIcon('svg_ce4537c1', w: 16, h: 16), const SizedBox(width: 6), Text('Page ${_page - 1}', style: nav)]),
+                  child: Row(children: [const AppIcon('svg_ce4537c1', w: 16, h: 16), AppGap.h6, Text('Page ${_page - 1}', style: nav)]),
                 ),
                 Row(children: [
                   GestureDetector(
                     onTap: () => showTafsirSheet(context, kMulkVerses[1], surah: 'Al-Mulk', ref: 'Al-Mulk 67'),
                     child: Container(
                       height: 26,
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: AppInsets.h8,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF5F5F4),
-                        border: Border.all(color: const Color(0xFFD6D3D1)),
-                        borderRadius: BorderRadius.circular(4),
+                        color: AppColors.neutral100,
+                        border: Border.all(color: AppColors.stone300),
+                        borderRadius: AppRadius.br4,
                       ),
-                      child: Text('Tafsir', style: ts(Ff.jakarta, 11, w500, const Color(0xFF44403C), lh: 16)),
+                      child: Text('Tafsir', style: ts(AppFonts.jakarta, 11, w500, AppColors.stone700, lh: 16)),
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  GestureDetector(onTap: () => showComingSoon(context, 'Page recitation'), child: const FigIcon('button_d477c1f3', w: 24, h: 24)),
-                  const SizedBox(width: 16),
+                  AppGap.h16,
+                  GestureDetector(onTap: () => showComingSoon(context, 'Page recitation'), child: const AppIcon('button_d477c1f3', w: 24, h: 24)),
+                  AppGap.h16,
                   GestureDetector(
                     onTap: () => setState(() => _bookmarked = !_bookmarked),
-                    child: Opacity(opacity: _bookmarked ? 1 : 0.6, child: const FigIcon('button_496ab95d', w: 24, h: 24)),
+                    child: Opacity(opacity: _bookmarked ? 1 : 0.6, child: const AppIcon('button_496ab95d', w: 24, h: 24)),
                   ),
                 ]),
                 GestureDetector(
                   onTap: () => setState(() => _page++),
-                  child: Row(children: [Text('Page ${_page + 1}', style: nav), const SizedBox(width: 6), const FigIcon('svg_0cfe70b4', w: 16, h: 16)]),
+                  child: Row(children: [Text('Page ${_page + 1}', style: nav), AppGap.h6, const AppIcon('svg_0cfe70b4', w: 16, h: 16)]),
                 ),
               ]),
             ),
@@ -188,11 +188,11 @@ class _MushafScreenState extends State<MushafScreen> {
 
   /// Classical Madani surah title frame (377×47 with corner accents).
   Widget _surahTitle() {
-    Widget corner() => Container(width: 6, height: 6, decoration: BoxDecoration(border: Border.all(color: const Color(0xFF18181B))));
+    Widget corner() => Container(width: 6, height: 6, decoration: BoxDecoration(border: Border.all(color: AppColors.grey91)));
     return Container(
       height: 47,
       padding: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 1.5),
-      decoration: BoxDecoration(color: _paper, border: Border.all(color: const Color(0xFF18181B))),
+      decoration: BoxDecoration(color: _paper, border: Border.all(color: AppColors.grey91)),
       child: Stack(children: [
         Positioned(left: -1.5, top: -0.5, child: corner()),
         Positioned(right: -1.5, top: -0.5, child: corner()),
@@ -202,18 +202,18 @@ class _MushafScreenState extends State<MushafScreen> {
           margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
           decoration: BoxDecoration(
-            gradient: const RadialGradient(colors: [Colors.white, Color(0xFFFAF8F2)]),
-            border: Border.all(color: const Color(0xFF27272A)),
+            gradient: const RadialGradient(colors: [AppColors.white, AppColors.grey02]),
+            border: Border.all(color: AppColors.grey84),
           ),
           child: Row(children: [
-            const Opacity(opacity: 0.9, child: FigIcon('left_decorative_arabesque_ro_dbddbfbc', w: 48, h: 36)),
+            const Opacity(opacity: 0.9, child: AppIcon('left_decorative_arabesque_ro_dbddbfbc', w: 48, h: 36)),
             Expanded(
               child: Center(
                 child: Text('سُورَةُ المُلْكِ',
-                    textDirection: TextDirection.rtl, style: ts(Ff.amiri, 24, w700, const Color(0xFF09090B), lh: 30, ls: 1.2)),
+                    textDirection: TextDirection.rtl, style: ts(AppFonts.amiri, 24, w700, AppColors.grey96, lh: 30, ls: 1.2)),
               ),
             ),
-            Transform.flip(flipX: true, child: const Opacity(opacity: 0.9, child: FigIcon('left_decorative_arabesque_ro_dbddbfbc', w: 48, h: 36))),
+            Transform.flip(flipX: true, child: const Opacity(opacity: 0.9, child: AppIcon('left_decorative_arabesque_ro_dbddbfbc', w: 48, h: 36))),
           ]),
         ),
       ]),

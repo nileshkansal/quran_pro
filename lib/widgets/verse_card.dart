@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../core/assets.dart';
-import '../core/figma.dart';
 import '../core/state/app_state.dart';
-import '../core/theme/app_colors.dart';
+import '../core/theme/theme.dart';
 import '../data/mock_data.dart';
-import 'common.dart';
-import 'fig_widgets.dart';
+import 'app_icon.dart';
+import 'app_snackbar.dart';
+import 'decorations.dart';
 
 /// Figma verse card (AI Baqara Details): 342 wide, pad 16, r20, #ecefeb border,
 /// gap 14 · badge/menu row · Arabic (Amiri Bold 16/41 #003b29) · divider ·
@@ -27,8 +27,8 @@ class VerseCard extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 220),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: AppColors.white,
+        borderRadius: AppRadius.br20,
         border: Border.all(color: playing ? AppColors.goldSoft : AppColors.surfaceDim),
       ),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
@@ -40,8 +40,8 @@ class VerseCard extends StatelessWidget {
               width: 32,
               height: 32,
               child: Stack(alignment: Alignment.center, children: [
-                Image.asset(AppIcons.verseBadge, width: 32, height: 32, color: Colors.black),
-                Text('${verse.number}', style: ts(Ff.inter, 14, w500, Colors.black, lh: 21.3, ls: 0.8)),
+                Image.asset(AppIcons.verseBadge, width: 32, height: 32, color: AppColors.pureBlack),
+                Text('${verse.number}', style: ts(AppFonts.inter, 14, w500, AppColors.pureBlack, lh: 21.3, ls: 0.8)),
               ]),
             ),
             const Spacer(),
@@ -54,35 +54,35 @@ class VerseCard extends StatelessWidget {
                 PopupMenuItem(value: 'Copy', child: Text('Copy')),
                 PopupMenuItem(value: 'Add note', child: Text('Add note')),
               ],
-              child: const FigIcon('pinhead_three_dot_horizontal_d970d4eb', w: 15, h: 15),
+              child: const AppIcon('pinhead_three_dot_horizontal_d970d4eb', w: 15, h: 15),
             ),
           ]),
         ),
-        const SizedBox(height: 14),
+        AppGap.v14,
         SizedBox(
           width: 258 * (scale > 1 ? 1.15 : 1),
           child: Text(
             verse.arabic,
             textAlign: TextAlign.center,
             textDirection: TextDirection.rtl,
-            style: ts(s.script == QuranScript.uthmani ? Ff.amiri : Ff.scheherazade, 16 * scale, w700, AppColors.green800, lh: 41 * scale),
+            style: ts(s.script == QuranScript.uthmani ? AppFonts.amiri : AppFonts.scheherazade, 16 * scale, w700, AppColors.green800, lh: 41 * scale),
           ),
         ),
-        const SizedBox(height: 10),
+        AppGap.v10,
         const DecorDivider(lineWidth: 131),
-        const SizedBox(height: 10),
+        AppGap.v10,
         SizedBox(
           width: 298,
           child: Text(
             '${verse.number}. ${verse.translation}',
             textAlign: TextAlign.center,
-            style: ts(Ff.inter, 12 * scale, w500, AppColors.textSecondary, lh: 16 * scale),
+            style: ts(AppFonts.inter, 12 * scale, w500, AppColors.textSecondary, lh: 16 * scale),
           ),
         ),
-        const SizedBox(height: 14),
+        AppGap.v14,
         // Full-bleed rule across the card.
         Transform.scale(scaleX: 342 / 310, child: Container(height: 1, color: AppColors.surfaceDim)),
-        const SizedBox(height: 14),
+        AppGap.v14,
         SizedBox(
           height: 16,
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -97,7 +97,7 @@ class VerseCard extends StatelessWidget {
     );
   }
 
-  Widget _sep() => Container(width: 1, height: 8, color: Colors.black);
+  Widget _sep() => Container(width: 1, height: 8, color: AppColors.pureBlack);
 
   Widget _action(String icon, String label, VoidCallback? onTap) => GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -105,9 +105,9 @@ class VerseCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 0),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
-            FigIcon(icon, w: 16, h: 16),
-            const SizedBox(width: 10),
-            Text(label, style: ts(Ff.inter, 12, w500, AppColors.textSecondary, lh: 16)),
+            AppIcon(icon, w: 16, h: 16),
+            AppGap.h10,
+            Text(label, style: AppTextStyles.caption),
           ]),
         ),
       );
@@ -129,7 +129,7 @@ class SurahHeroCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(15.1),
         child: Stack(fit: StackFit.expand, children: [
           Image.asset(AppImages.surahCard, fit: BoxFit.fill),
-          const Positioned(left: 274.8, top: 46.5, child: FigIcon('at_icons_moon_98864fe5', w: 25.8, h: 25.8)),
+          const Positioned(left: 274.8, top: 46.5, child: AppIcon('at_icons_moon_98864fe5', w: 25.8, h: 25.8)),
           Positioned(
             left: 15.5,
             top: 15,
@@ -137,17 +137,17 @@ class SurahHeroCard extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 2.2),
-                child: Text(title, style: ts(Ff.inter, 17.6, w600, Colors.white, lh: 30.9)),
+                child: Text(title, style: ts(AppFonts.inter, 17.6, w600, AppColors.white, lh: 30.9)),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 13.2),
-                child: Opacity(opacity: 0.9, child: Text(subtitle, style: ts(Ff.inter, 11, w500, AppColors.green300, lh: 15.4, ls: -0.1))),
+                child: Opacity(opacity: 0.9, child: Text(subtitle, style: ts(AppFonts.inter, 11, w500, AppColors.green300, lh: 15.4, ls: -0.1))),
               ),
               Opacity(
                 opacity: 0.9,
                 child: SizedBox(
                   height: 72,
-                  child: Text(summary, overflow: TextOverflow.fade, style: ts(Ff.inter, 8.8, w400, AppColors.green300, lh: 14.3)),
+                  child: Text(summary, overflow: TextOverflow.fade, style: ts(AppFonts.inter, 8.8, w400, AppColors.green300, lh: 14.3)),
                 ),
               ),
               const SizedBox(height: 13.2),
@@ -155,13 +155,13 @@ class SurahHeroCard extends StatelessWidget {
                 height: 18.9,
                 padding: const EdgeInsets.symmetric(horizontal: 8.8),
                 decoration: BoxDecoration(
-                  color: fc(0x003B29, .2),
-                  gradient: LinearGradient(colors: [fc(0xFFFFFF, .4), fc(0xFFFFFF, .1)]),
-                  border: Border.all(color: fc(0xFFFFFF, .2), width: 0.6),
-                  borderRadius: BorderRadius.circular(9999),
+                  color: AppColors.green800.o(.2),
+                  gradient: LinearGradient(colors: [AppColors.white.o(.4), AppColors.white.o(.1)]),
+                  border: Border.all(color: AppColors.white.o(.2), width: 0.6),
+                  borderRadius: AppRadius.pill,
                 ),
                 alignment: Alignment.center,
-                child: Text(badge, style: ts(Ff.inter, 6.6, w500, AppColors.green300, lh: 8.8, ls: 0.3)),
+                child: Text(badge, style: ts(AppFonts.inter, 6.6, w500, AppColors.green300, lh: 8.8, ls: 0.3)),
               ),
             ]),
           ),

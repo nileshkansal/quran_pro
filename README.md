@@ -28,24 +28,40 @@ On Windows you can build and run the **Android** app (emulator or USB device). i
 
 ```
 lib/
-  main.dart                     App entry (MaterialApp + named routes)
+  main.dart                     App entry (MaterialApp + DesignScale + named routes)
   core/
+    theme/                      ── Design system (import theme/theme.dart) ──
+      app_colors.dart           Every colour (AppColors) + gradients + .o(opacity)
+      app_fonts.dart            Font families (AppFonts) + weights w400…w800
+      app_text_styles.dart      Type scale (AppTextStyles) + ts() for one-off Figma styles
+      app_dimens.dart           AppDesign canvas, AppSpacing, AppGap, AppInsets, AppRadius, AppSizes
+      app_shadows.dart          AppShadows presets + fShadow()
+      app_theme.dart            Material ThemeData built from the tokens
+    design_scale.dart           Scales the 390-wide Figma canvas to every screen width
     routes/app_routes.dart      Every route in the click-flow, named after its Figma frame
-    theme/                      Colour tokens + text styles from Figma
     state/app_state.dart        In-memory prototype state (ChangeNotifier)
-    utils/hijri.dart            Hijri date conversion for Prayer Times
-    assets.dart                 Asset paths
-  core/figma.dart               Pixel-perfect helpers: ts() Figma text styles, FigIcon, GradientText, shadows
-  core/l10n/app_language.dart   English / Tamil / Arabic / Urdu (locale + text direction)
-  data/mock_data.dart           Surahs, verses, tafsir, prayer times, reciters
-  data/dua_data.dart            Dua and Virtues of Deeds sample content
-  widgets/                      Shared UI: fig_widgets (FigButton, FigInput, GoldRing, FigSubPage…), sheets, bottom nav, verse card
+    l10n/app_language.dart      English / Tamil / Arabic / Urdu (locale + text direction)
+    utils/                      validators.dart, formatters.dart, hijri.dart
+    assets.dart                 Asset paths (AppImages, AppIcons)
+  widgets/                      ── Reusable components (import widgets/widgets.dart) ──
+    app_button.dart             AppButton (gold/outline/dark/green/danger, .pill), AppCircleIconButton,
+                                AppTextLink, SocialButtons
+    app_text_field.dart         AppTextField, AppPasswordField, AppLabeledField, AppTextArea
+    app_dialog.dart             showAppModal (centre / bottom, 3 barriers), AppAlertDialog, showConfirmDialog
+    app_sheet.dart              showAppSheet, SheetCloseButton
+    app_snackbar.dart           showAppSnackBar, showComingSoon
+    app_switch.dart             AppSwitch (+ .small)
+    app_card.dart               AppCard, GlassCard, CardHeader, AppListRow, AppChevron, AppDecorations
+    app_layout.dart             DesignCanvas, CanvasCenter, AppHeader, AppSubPage, AppBackButton, ArrowBackButton
+    app_icon.dart               AppIcon (Figma-exported icons), GradientText
+    decorations.dart            LanternBackdrop, DecorDivider, OrnamentDivider, OrDivider, Logo, PagerDots, GoldRing
+    bottom_nav.dart, verse_card.dart
+  data/                         mock_data.dart, dua_data.dart (sample content)
   features/
     onboarding/                 Splash → Language → Welcome → Onboarding 1-5 → Profile → … → Reading setup
     auth/                       Login, Forgot password, OTP, Reset, Success
     home/                       Shell + Home tab, Dua, Virtues, Qibla / Prayer Times / Choose Location sheets
-    quran/                      Quran Sanctuary, Surah detail (translation), Tafsir, Share, Audio,
-                                Daily Reading, Success, Mushaf (Arabic reading)
+    quran/                      Quran Sanctuary, Surah detail, Tafsir, Share, Audio, Daily Reading, Success, Mushaf
     profile/                    Profile (with progress), Edit Profile, My Goals
     settings/                   Settings, Reading settings, Audio & Recitation, About, Help,
                                 Privacy, Terms, Feedback, Logout/Delete dialogs
@@ -56,6 +72,21 @@ assets/
   fonts/                        Inter, Poppins, Plus Jakarta Sans, Montserrat, Amiri, Amiri Quran,
                                 Scheherazade New, Cormorant Garamond, Cinzel, Nunito, Hachi Maru Pop (all OFL)
 ```
+
+## Design system rules
+
+Screens import two files and nothing else for UI:
+
+```dart
+import '../../core/theme/theme.dart';   // tokens
+import '../../widgets/widgets.dart';    // components
+```
+
+- **Colours** — only `AppColors.*` (no `Color(0x…)` or `Colors.*` in screens). Transparency: `AppColors.outline.o(.3)`.
+- **Fonts / text** — `AppTextStyles.*` first (`AppTextStyles.title`, `.body`, `.label`…), recolour with `.c(color)`. Use `ts(AppFonts.x, size, weight, color, lh:, ls:)` only for a one-off Figma style.
+- **Spacing / radius / sizes** — `AppGap.v16`, `AppInsets.all24`, `AppRadius.br12`, `AppSizes.buttonHeight`, `AppShadows.md`. Odd Figma positions (e.g. 53.8) stay as literal numbers because they belong to one frame only.
+- **Components** — buttons, fields, switches, dialogs, sheets, snackbars, cards and headers come from `widgets/`. Need a variation? Add a parameter to the component instead of building it inline.
+- **Logic helpers** — `Validators` (e-mail, password strength) and `Formatters` (initials, Arabic digits, month/year).
 
 ## Click flow
 

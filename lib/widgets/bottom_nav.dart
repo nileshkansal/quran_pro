@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../core/figma.dart';
-import '../core/theme/app_colors.dart';
+import '../core/theme/theme.dart';
+import 'app_icon.dart';
 
 /// Shared tab index so nested screens can switch the root tab.
 final ValueNotifier<int> mainTabIndex = ValueNotifier<int>(0);
@@ -30,7 +30,7 @@ class AppBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFFFFF8F3),
+        color: AppColors.cream,
         borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
       ),
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
@@ -56,8 +56,8 @@ class AppBottomNav extends StatelessWidget {
     final (label, icon, activeIcon, w, h) = _items[i];
     final active = i == index;
     final style = active
-        ? ts(Ff.inter, 10, w700, i == 0 ? Colors.white : AppColors.green700, lh: 15)
-        : ts(Ff.inter, 10, w400, AppColors.textSecondary, lh: 15);
+        ? ts(AppFonts.inter, 10, w700, i == 0 ? AppColors.white : AppColors.green700, lh: 15)
+        : ts(AppFonts.inter, 10, w400, AppColors.textSecondary, lh: 15);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => onTap(i),
@@ -65,7 +65,7 @@ class AppBottomNav extends StatelessWidget {
         width: w,
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           // The exported "margin" frames already include the 4px gap under the icon.
-          FigIcon(active ? activeIcon : icon, w: w, h: h),
+          AppIcon(active ? activeIcon : icon, w: w, h: h),
           active && i == 0
               ? GradientText(label, style: style, gradient: AppColors.goldGradient)
               : Text(label, style: style),

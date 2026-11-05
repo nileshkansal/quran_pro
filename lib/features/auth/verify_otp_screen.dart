@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../core/figma.dart';
 import '../../core/routes/app_routes.dart';
-import '../../core/theme/app_colors.dart';
 import 'auth_card_page.dart';
+import '../../core/theme/theme.dart';
+import '../../widgets/widgets.dart';
 
 /// Figma: "Forgot Password - OTP Verification" (6001:7051)
 class VerifyOtpScreen extends StatefulWidget {
@@ -46,9 +46,9 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
       backIcon: 'button_go_back_cee1985f',
       child: Column(children: [
         AuthTitle('Verify your Email', 'Enter the 6-digit code sent to\n${widget.email}', subtitleSize: 14, subtitleLh: 24),
-        const SizedBox(height: 12),
+        AppGap.v12,
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: AppInsets.v12,
           child: Column(children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               for (var i = 0; i < 6; i++)
@@ -58,14 +58,14 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   child: _box(i),
                 ),
             ]),
-            const SizedBox(height: 24),
+            AppGap.v24,
             AuthAction(label: 'Verify', onTap: () => Navigator.of(context).pushNamed(AppRoutes.resetPassword)),
           ]),
         ),
-        const SizedBox(height: 12),
+        AppGap.v12,
         GestureDetector(
           onTap: () => Navigator.of(context).popUntil((r) => r.settings.name == AppRoutes.login || r.isFirst),
-          child: GradientText('Return to Login', style: ts(Ff.inter, 14, w500, Colors.white, lh: 21), gradient: AppColors.goldGradient),
+          child: GradientText('Return to Login', style: ts(AppFonts.inter, 14, w500, AppColors.white, lh: 21), gradient: AppColors.goldGradient),
         ),
       ]),
     );
@@ -75,14 +75,14 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     final focused = _f[i].hasFocus;
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAF6),
-        borderRadius: BorderRadius.circular(8),
+        color: AppColors.surface,
+        borderRadius: AppRadius.br8,
         border: focused ? null : Border.all(color: AppColors.outline),
         gradient: null,
-        boxShadow: focused ? [const BoxShadow(color: Color(0xFF07543D), spreadRadius: 1)] : null,
+        boxShadow: focused ? [const BoxShadow(color: AppColors.green700, spreadRadius: 1)] : null,
       ),
       foregroundDecoration: focused
-          ? BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.gold))
+          ? BoxDecoration(borderRadius: AppRadius.br8, border: Border.all(color: AppColors.gold))
           : null,
       alignment: Alignment.center,
       child: TextField(
@@ -93,7 +93,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         keyboardType: TextInputType.number,
         cursorColor: AppColors.green700,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(1)],
-        style: ts(Ff.inter, 20, w600, AppColors.textPrimary, lh: 24),
+        style: ts(AppFonts.inter, 20, w600, AppColors.textPrimary, lh: 24),
         decoration: const InputDecoration(isCollapsed: true, border: InputBorder.none, counterText: ''),
         onChanged: (v) {
           if (v.isNotEmpty && i < 5) _f[i + 1].requestFocus();

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/bottom_nav.dart';
 import '../profile/profile_screen.dart';
 import '../settings/feedback_screen.dart';
 import '../settings/settings_screen.dart';
 import 'home_screen.dart';
+import '../../widgets/widgets.dart';
 
 /// Root after onboarding/login: Home · Feedback · Setting · Profile.
 class MainShell extends StatelessWidget {

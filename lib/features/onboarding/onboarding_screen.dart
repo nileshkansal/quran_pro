@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../core/assets.dart';
-import '../../core/figma.dart';
 import '../../core/routes/app_routes.dart';
-import '../../core/theme/app_colors.dart';
-import '../../widgets/fig_widgets.dart';
+import '../../core/theme/theme.dart';
+import '../../widgets/widgets.dart';
+import 'widgets/onboarding_bar.dart';
 
 /// Figma: "Onboarding 1" … "Onboarding 5" (6001:1733 / 1795 / 1937 / 2004 / 2122).
 class OnboardingScreen extends StatefulWidget {
@@ -44,15 +44,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: Stack(children: [
         PageView(
           controller: _pc,
           onPageChanged: (i) => setState(() => _page = i),
           children: [
             for (var i = 0; i < 5; i++)
-              FigCanvas(
-                decoration: i == 4 ? const BoxDecoration(color: Color(0xFFFCFBFA)) : _pageGradient(i == 0),
+              DesignCanvas(
+                decoration: i == 4 ? const BoxDecoration(color: AppColors.background) : _pageGradient(i == 0),
                 children: [
                   ..._pageContent(i),
                   Positioned(
@@ -60,7 +60,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     left: -90.5,
                     width: 567,
                     height: 233,
-                    child: Image.asset(i == 0 ? 'assets/icons/wave_gold.png' : 'assets/icons/wave_cream.png', fit: BoxFit.fill),
+                    child: Image.asset(i == 0 ? AppIcons.waveGold : AppIcons.waveCream, fit: BoxFit.fill),
                   ),
                 ],
               ),
@@ -72,14 +72,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           bottom: _barBottom[_page],
           left: 16,
           right: 16,
-          child: Center(child: OnbBar(index: _page, onNext: _next, firstPage: _page == 0)),
+          child: Center(child: OnboardingBar(index: _page, onNext: _next, firstPage: _page == 0)),
         ),
         Positioned(
           top: MediaQuery.of(context).padding.top,
           right: 8,
           child: TextButton(
             onPressed: () => widget.tour ? Navigator.of(context).pop() : Navigator.of(context).pushNamed(AppRoutes.createProfile),
-            child: Text(widget.tour ? 'Close' : 'Skip', style: ts(Ff.inter, 13, w500, AppColors.textMuted)),
+            child: Text(widget.tour ? 'Close' : 'Skip', style: ts(AppFonts.inter, 13, w500, AppColors.textMuted)),
           ),
         ),
       ]),
@@ -90,7 +90,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [first ? const Color(0xFFF8FAF6) : const Color(0xFFFBF7F2), Colors.white],
+          colors: [first ? AppColors.surface : AppColors.grey02, AppColors.white],
         ),
       );
 
@@ -111,25 +111,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           right: 48,
           child: Column(children: [
             const Logo.small(width: 103.6),
-            const SizedBox(height: 30),
+            AppGap.v30,
             SizedBox(
               width: 236,
               child: Text(
                 'The Quran was revealed to be understood',
                 textAlign: TextAlign.center,
-                style: ts(Ff.poppins, 17, w600, AppColors.green800, lh: 28, ls: -0.2),
+                style: ts(AppFonts.poppins, 17, w600, AppColors.green800, lh: 28, ls: -0.2),
               ),
             ),
-            const SizedBox(height: 30),
+            AppGap.v30,
             const GoldFadeLine(),
-            const SizedBox(height: 30),
+            AppGap.v30,
             SizedBox(
               width: 279,
               child: Column(children: [
                 _iconLine('frame_2085667648_b1a9eda4', 'Millions of Muslims read the Qur\'an without understanding its meaning.', 20),
-                const SizedBox(height: 15),
+                AppGap.v15,
                 _iconLine('frame_2085667648_f6d39382', 'Our mission is to help Muslims understand the message of the Qur\'an.', 18),
-                const SizedBox(height: 15),
+                AppGap.v15,
                 _iconLine('frame_2085667648_7620cf0f',
                     'Through QuranPro, we help people reflect on its verses, strengthen their connection with Allah, and live by the guidance of the Qur\'an.', 20),
               ]),
@@ -139,9 +139,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ];
 
   Widget _iconLine(String icon, String text, double lh) => Row(children: [
-        FigIcon(icon, w: 40, h: 40),
-        const SizedBox(width: 10),
-        Expanded(child: Text(text, style: ts(Ff.poppins, 11, w400, Colors.black, lh: lh))),
+        AppIcon(icon, w: 40, h: 40),
+        AppGap.h10,
+        Expanded(child: Text(text, style: ts(AppFonts.poppins, 11, w400, AppColors.pureBlack, lh: lh))),
       ]);
 
   // ───────────── Onboarding 2 ─────────────
@@ -151,23 +151,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           left: 41,
           right: 37,
           child: Column(children: [
-            const FigIcon('frame_2085667722_6a0c3718', w: 65.5, h: 63),
-            const SizedBox(height: 16),
+            const AppIcon('frame_2085667722_6a0c3718', w: 65.5, h: 63),
+            AppGap.v16,
             SizedBox(
               width: 296,
               child: Text(
                 'Don’t Feel the Connection Between Verses?',
                 textAlign: TextAlign.center,
-                style: ts(Ff.poppins, 17, w600, AppColors.green800, lh: 25, ls: -0.2),
+                style: ts(AppFonts.poppins, 17, w600, AppColors.green800, lh: 25, ls: -0.2),
               ),
             ),
-            const SizedBox(height: 16),
+            AppGap.v16,
             const GoldFadeLine(),
-            const SizedBox(height: 16),
+            AppGap.v16,
             Text(
               'We’ve organized the Qur’an into topic-based sections with a short summary before each one, helping you understand, ponder, and connect the verses with ease.',
               textAlign: TextAlign.center,
-              style: ts(Ff.poppins, 11, w400, Colors.black, lh: 22),
+              style: ts(AppFonts.poppins, 11, w400, AppColors.pureBlack, lh: 22),
             ),
           ]),
         ),
@@ -178,7 +178,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           width: 224.9,
           height: 456.7,
           child: Stack(children: [
-            Positioned.fill(child: Image.asset('assets/icons/onb2_phone_frame.png', fit: BoxFit.fill)),
+            Positioned.fill(child: Image.asset(AppIcons.onb2PhoneFrame, fit: BoxFit.fill)),
             Positioned(
               left: 11.2,
               top: 9.5,
@@ -189,7 +189,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: Image.asset(AppImages.onb2Screen, fit: BoxFit.fitWidth, alignment: Alignment.topCenter),
               ),
             ),
-            const Positioned(left: 80.4, top: 16.4, child: FigIcon('camera_17b026da', w: 64, h: 18.7)),
+            const Positioned(left: 80.4, top: 16.4, child: AppIcon('camera_17b026da', w: 64, h: 18.7)),
           ]),
         ),
         _callout(345, 248, 31, 14, 'Chapter / Surah ', 'Each Surah is clearly identified.', 22),
@@ -201,15 +201,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         top: top,
         left: left,
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Container(width: lineW, height: 0.7, color: Colors.black),
+          Container(width: lineW, height: 0.7, color: AppColors.pureBlack),
           SizedBox(width: gap),
           SizedBox(
             width: 102.9,
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-              Text(title, style: ts(Ff.inter, 12, w600, AppColors.textPrimary, lh: 19.5)),
+              Text(title, style: ts(AppFonts.inter, 12, w600, AppColors.textPrimary, lh: 19.5)),
               SizedBox(
                 width: 94,
-                child: Text(body, style: ts(Ff.inter, 10, w500, AppColors.textMuted, lh: 11)),
+                child: Text(body, style: ts(AppFonts.inter, 10, w500, AppColors.textMuted, lh: 11)),
               ),
             ]),
           ),
@@ -232,20 +232,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           left: 20,
           width: 300,
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Addicted to scrolling?', style: ts(Ff.poppins, 26.1, w600, AppColors.green800, lh: 34.8)),
+            Text('Addicted to scrolling?', style: ts(AppFonts.poppins, 26.1, w600, AppColors.green800, lh: 34.8)),
             const SizedBox(height: 8.2),
             SizedBox(
               width: 184.1,
-              child: Text('Turn your scrolling into\na Quran habit.', style: ts(Ff.inter, 12.4, w500, Colors.black, lh: 20.4)),
+              child: Text('Turn your scrolling into\na Quran habit.', style: ts(AppFonts.inter, 12.4, w500, AppColors.pureBlack, lh: 20.4)),
             ),
-            const SizedBox(height: 16),
-            Container(width: 49.1, height: 2, color: const Color(0xFFAE790E)),
-            const SizedBox(height: 16),
+            AppGap.v16,
+            Container(width: 49.1, height: 2, color: AppColors.gold63),
+            AppGap.v16,
             SizedBox(
               width: 164.7,
               child: Text(
                 'QuranPro is designed to help you build a daily Qur’an habit through personalized reading targets, motivational reminders, creative notifications, beautiful home screen widgets, and progress tracking—keeping you inspired every day.',
-                style: ts(Ff.poppins, 10.3, w400, Colors.black, lh: 22.3),
+                style: ts(AppFonts.poppins, 10.3, w400, AppColors.pureBlack, lh: 22.3),
               ),
             ),
             const SizedBox(height: 30.4),
@@ -257,12 +257,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   height: 36.8,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7.2),
-                    boxShadow: [fShadow(fc(0x000000, .2), 0, 2, 14.3)],
+                    boxShadow: [fShadow(AppColors.pureBlack.o(.2), 0, 2, 14.3)],
                   ),
-                  child: FigIcon(_features[k].$1, w: 36.8, h: 36.8),
+                  child: AppIcon(_features[k].$1, w: 36.8, h: 36.8),
                 ),
                 const SizedBox(width: 8.2),
-                Text(_features[k].$2, style: ts(Ff.inter, 10.2, w400, Colors.black, lh: 14.3)),
+                Text(_features[k].$2, style: ts(AppFonts.inter, 10.2, w400, AppColors.pureBlack, lh: 14.3)),
               ]),
             ],
           ]),
@@ -276,20 +276,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           left: 41,
           right: 37,
           child: Column(children: [
-            const FigIcon('frame_2085667722_6a0c3718', w: 65.5, h: 63),
-            const SizedBox(height: 20),
+            const AppIcon('frame_2085667722_6a0c3718', w: 65.5, h: 63),
+            AppGap.v20,
             SizedBox(
               width: 296,
               child: Text(
                 'Completely Free.  No Subscription Required.',
                 textAlign: TextAlign.center,
-                style: ts(Ff.poppins, 17, w600, AppColors.green800, lh: 28, ls: -0.2),
+                style: ts(AppFonts.poppins, 17, w600, AppColors.green800, lh: 28, ls: -0.2),
               ),
             ),
-            const SizedBox(height: 15),
+            AppGap.v15,
             const GoldFadeLine(),
-            const SizedBox(height: 15),
-            Text('Why pay every month?', textAlign: TextAlign.center, style: ts(Ff.inter, 12, w400, Colors.black, lh: 13)),
+            AppGap.v15,
+            Text('Why pay every month?', textAlign: TextAlign.center, style: ts(AppFonts.inter, 12, w400, AppColors.pureBlack, lh: 13)),
           ]),
         ),
         const Positioned(top: 259, left: 16, width: 358, height: 295, child: _CompareTable()),
@@ -303,7 +303,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               width: 174,
               child: Text(
                 'Because everyone deserves  free access to the Qur’an  and its understanding.',
-                style: ts(Ff.poppins, 11, w400, Colors.black, lh: 18),
+                style: ts(AppFonts.poppins, 11, w400, AppColors.pureBlack, lh: 18),
               ),
             ),
             Image.asset(AppImages.quranStandBig, width: 96, height: 64, fit: BoxFit.cover),
@@ -331,17 +331,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             SizedBox(
               width: 323,
               child: Text('More Than \nJust a Quran App',
-                  textAlign: TextAlign.center, style: ts(Ff.inter, 25, w600, AppColors.textPrimary, lh: 35)),
+                  textAlign: TextAlign.center, style: ts(AppFonts.inter, 25, w600, AppColors.textPrimary, lh: 35)),
             ),
-            const SizedBox(height: 15),
+            AppGap.v15,
             const DecorDivider(),
-            const SizedBox(height: 15),
+            AppGap.v15,
             SizedBox(
               width: 334,
               child: Text(
                 'We help you make the Qur’an a part of your everyday life — reading with understanding and discovering guidance in every verse.',
                 textAlign: TextAlign.center,
-                style: ts(Ff.poppins, 12, w400, AppColors.textSecondary, lh: 25),
+                style: ts(AppFonts.poppins, 12, w400, AppColors.textSecondary, lh: 25),
               ),
             ),
             const SizedBox(height: 36),
@@ -350,9 +350,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 SizedBox(
                   width: t.$3,
                   child: Column(children: [
-                    FigIcon(t.$1, w: 50, h: 50),
+                    AppIcon(t.$1, w: 50, h: 50),
                     const SizedBox(height: 9.4),
-                    Text(t.$2, textAlign: TextAlign.center, style: ts(Ff.inter, 12.6, w500, AppColors.textPrimary, lh: 18.8)),
+                    Text(t.$2, textAlign: TextAlign.center, style: ts(AppFonts.inter, 12.6, w500, AppColors.textPrimary, lh: 18.8)),
                   ]),
                 ),
             ]),
@@ -362,14 +362,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               height: 55,
               padding: const EdgeInsets.all(8.4),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(11.8),
-                boxShadow: [fShadow(fc(0x000000, .1), 0, 0, 15)],
+                boxShadow: AppShadows.glow,
               ),
               child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 _badge('security_check_90cc3561', '100% Free.', 'Made for the ummah.'),
                 const SizedBox(width: 15.2),
-                Container(width: 0.8, height: 14.4, color: Colors.black),
+                Container(width: 0.8, height: 14.4, color: AppColors.pureBlack),
                 const SizedBox(width: 15.2),
                 _badge('gift_1196161c', 'No hidden charges.', 'Just pure benefit.'),
               ]),
@@ -381,13 +381,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget _badge(String icon, String a, String b) => SizedBox(
         width: 136.8,
         child: Row(children: [
-          FigIcon(icon, w: 20.3, h: 20.3),
+          AppIcon(icon, w: 20.3, h: 20.3),
           const SizedBox(width: 9.3),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-              Text(a, maxLines: 1, style: ts(Ff.inter, 11.8, w600, Colors.black, lh: 11)),
+              Text(a, maxLines: 1, style: ts(AppFonts.inter, 11.8, w600, AppColors.pureBlack, lh: 11)),
               const SizedBox(height: 4.2),
-              Text(b, maxLines: 1, style: ts(Ff.inter, 10.1, w500, Colors.black, lh: 11)),
+              Text(b, maxLines: 1, style: ts(AppFonts.inter, 10.1, w500, AppColors.pureBlack, lh: 11)),
             ]),
           ),
         ]),
@@ -398,15 +398,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 class _CompareTable extends StatelessWidget {
   const _CompareTable();
 
-  static final _gold = ts(Ff.inter, 12, w500, Colors.white, lh: 13);
+  static final _gold = ts(AppFonts.inter, 12, w500, AppColors.white, lh: 13);
 
   Widget _goldText(String s, TextStyle st) => GradientText(s, style: st, gradient: AppColors.goldGradient, textAlign: TextAlign.center);
 
-  Widget _tick() => const FigIcon('teenyicons_tick_circle_solid_b1bcd1f5', w: 15, h: 15);
+  Widget _tick() => const AppIcon('teenyicons_tick_circle_solid_b1bcd1f5', w: 15, h: 15);
   Widget _dash() => SizedBox(
         width: 15,
         height: 15,
-        child: Center(child: _goldText('-', ts(Ff.inter, 19, w400, Colors.white, lh: 13))),
+        child: Center(child: _goldText('-', ts(AppFonts.inter, 19, w400, AppColors.white, lh: 13))),
       );
 
   Widget _col({required double width, required double gap, required List<Widget> children, BoxDecoration? deco}) => Container(
@@ -420,14 +420,14 @@ class _CompareTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label = ts(Ff.inter, 10, w400, Colors.black, lh: 13);
+    final label = ts(AppFonts.inter, 10, w400, AppColors.pureBlack, lh: 13);
     return Stack(children: [
       Positioned(
         top: 19,
         left: 0,
         width: 99,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          SizedBox(width: 79, child: Text('What you pay', textAlign: TextAlign.center, style: ts(Ff.inter, 12, w500, Colors.black, lh: 13))),
+          SizedBox(width: 79, child: Text('What you pay', textAlign: TextAlign.center, style: ts(AppFonts.inter, 12, w500, AppColors.pureBlack, lh: 13))),
           const SizedBox(height: 47),
           for (final (i, s) in ['Monthly cost', 'Premium Content', 'Offline Access', 'Ad-free Experience', 'Rewards for your deen'].indexed) ...[
             if (i > 0) const SizedBox(height: 21),
@@ -445,43 +445,43 @@ class _CompareTable extends StatelessWidget {
             width: 53,
             gap: 33,
             deco: BoxDecoration(
-              color: const Color(0xFFF0F1E9),
-              border: Border.all(color: fc(0x000000, .2)),
+              color: AppColors.gold07,
+              border: Border.all(color: AppColors.pureBlack.o(.2)),
               borderRadius: BorderRadius.circular(11),
             ),
             children: [
-              const FigIcon('frame_2085667723_6c813e81', w: 45.5, h: 43.9),
+              const AppIcon('frame_2085667723_6c813e81', w: 45.5, h: 43.9),
               _goldText('Free', _gold),
               _tick(), _tick(), _tick(), _tick(),
             ],
           ),
-          const SizedBox(width: 10),
+          AppGap.h10,
           _col(width: 58, gap: 33, children: [
             SizedBox(
               height: 43.9,
               child: Column(children: [
-                const FigIcon('thesvg_color_netflix_aceb46bb', w: 13.9, h: 25.3),
+                const AppIcon('thesvg_color_netflix_aceb46bb', w: 13.9, h: 25.3),
                 const SizedBox(height: 5.6),
-                _goldText('Netflix', ts(Ff.inter, 11.2, w400, Colors.white, lh: 12.2)),
+                _goldText('Netflix', ts(AppFonts.inter, 11.2, w400, AppColors.white, lh: 12.2)),
               ]),
             ),
             _goldText('₹649/month', _gold),
             _tick(), _tick(), _dash(), _dash(),
           ]),
-          const SizedBox(width: 10),
+          AppGap.h10,
           _col(width: 57, gap: 33, children: [
-            const FigIcon('selfhst_amazon_prime_4640a26e', w: 43.1, h: 43.1),
+            const AppIcon('selfhst_amazon_prime_4640a26e', w: 43.1, h: 43.1),
             _goldText('₹299/month', _gold),
             _tick(), _tick(), _dash(), _dash(),
           ]),
-          const SizedBox(width: 10),
+          AppGap.h10,
           _col(width: 56, gap: 34, children: [
             SizedBox(
               height: 44.1,
               child: Column(children: [
-                const FigIcon('selfhst_spotify_58d21b89', w: 19.7, h: 19.7),
+                const AppIcon('selfhst_spotify_58d21b89', w: 19.7, h: 19.7),
                 const SizedBox(height: 7.4),
-                _goldText('Spotify', ts(Ff.inter, 14.8, w400, Colors.white, lh: 16)),
+                _goldText('Spotify', ts(AppFonts.inter, 14.8, w400, AppColors.white, lh: 16)),
               ]),
             ),
             _goldText('₹199/month', _gold),

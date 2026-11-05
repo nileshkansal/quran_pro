@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import '../core/theme/theme.dart';
 
 /// Renders the whole app on a fixed 390-dp-wide Figma canvas and scales it
 /// uniformly to the phone's real width, so every screen keeps the exact
@@ -19,7 +20,7 @@ class DesignScale extends StatelessWidget {
     required this.child,
     this.designWidth = 390,
     this.maxScale = 1.25,
-    this.background = const Color(0xFFF8FAF6),
+    this.background = AppColors.surface,
   });
 
   final Widget child;

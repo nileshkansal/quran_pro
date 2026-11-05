@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../core/figma.dart';
 import '../../core/routes/app_routes.dart';
-import '../../core/theme/app_colors.dart';
-import '../../widgets/fig_widgets.dart';
 import 'auth_card_page.dart';
+import '../../core/theme/theme.dart';
+import '../../core/utils/validators.dart';
+import '../../widgets/widgets.dart';
 
 /// Figma: "Reset Password - New Password" (6001:7096)
 class ResetPasswordScreen extends StatefulWidget {
@@ -17,8 +17,6 @@ class ResetPasswordScreen extends StatefulWidget {
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _p1 = TextEditingController();
   final _p2 = TextEditingController();
-  bool _show1 = false;
-  bool _show2 = false;
 
   @override
   void initState() {
@@ -34,34 +32,24 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     super.dispose();
   }
 
-  int get _strength {
-    final p = _p1.text;
-    var s = 0;
-    if (p.length >= 8) s++;
-    if (RegExp(r'[A-Z]').hasMatch(p)) s++;
-    if (RegExp(r'\d').hasMatch(p)) s++;
-    if (RegExp(r'[^A-Za-z0-9]').hasMatch(p)) s++;
-    return s;
-  }
+  int get _strength => Validators.passwordStrength(_p1.text);
 
   Widget _label(String t) => SizedBox(
         width: double.infinity,
-        child: Text(t, style: ts(Ff.inter, 12, w500, AppColors.textSecondary, lh: 16, ls: 0.6)),
+        child: Text(t, style: AppTextStyles.label),
       );
 
-  Widget _field(TextEditingController c, String hint, String lead, double leadW, bool show, VoidCallback toggle) => FigInput(
+  Widget _field(TextEditingController c, String hint, String lead, double leadW) => AppPasswordField(
         controller: c,
         height: 49,
-        radius: 8,
-        obscure: !show,
-        fill: const Color(0xFFF8FAF6),
+        radius: AppRadius.r8,
+        fill: AppColors.surface,
         borderColor: AppColors.divider,
         hint: hint,
-        hintStyle: ts(Ff.inter, 16, w400, AppColors.outline),
+        hintStyle: ts(AppFonts.inter, 16, w400, AppColors.outline),
         leadingWidth: 40,
-        leading: FigIcon(lead, w: leadW, h: 49),
-        trailing: GestureDetector(onTap: toggle, child: const FigIcon('container_8b8819de', w: 34, h: 49)),
-        trailingPad: 0,
+        leading: AppIcon(lead, w: leadW, h: 49),
+        toggleBuilder: (_) => const AppIcon('container_8b8819de', w: 34, h: 49),
       );
 
   @override
@@ -72,50 +60,50 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     final lit = _p1.text.isEmpty ? 3 : _strength.clamp(1, 4);
     return AuthCardPage(
       cardTop: 260,
-      padding: const EdgeInsets.all(24),
+      padding: AppInsets.all24,
       backIcon: 'button_c40105e5',
       child: Column(children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
-          child: Text('Reset Password', style: ts(Ff.poppins, 20, w600, AppColors.textPrimary, lh: 28, ls: -0.2)),
+          child: Text('Reset Password', style: ts(AppFonts.poppins, 20, w600, AppColors.textPrimary, lh: 28, ls: -0.2)),
         ),
         Text('Create a new secure password for\nyour account.',
-            textAlign: TextAlign.center, style: ts(Ff.inter, 16, w400, AppColors.textSecondary, lh: 24)),
-        const SizedBox(height: 24),
+            textAlign: TextAlign.center, style: AppTextStyles.body),
+        AppGap.v24,
         _label('NEW PASSWORD'),
-        const SizedBox(height: 8),
-        _field(_p1, 'Enter new password', 'container_0abfae6c', 28, _show1, () => setState(() => _show1 = !_show1)),
-        const SizedBox(height: 24),
+        AppGap.v8,
+        _field(_p1, 'Enter new password', 'container_0abfae6c', 28),
+        AppGap.v24,
         Row(children: [
-          Text('Password Strength:', style: ts(Ff.inter, 12, w500, AppColors.textSecondary, lh: 16, ls: 0.6)),
+          Text('Password Strength:', style: AppTextStyles.label),
           const Spacer(),
-          Text(_p1.text.isEmpty ? 'Strong' : names[_strength], style: ts(Ff.inter, 12, w500, AppColors.green500, lh: 16, ls: 0.6)),
+          Text(_p1.text.isEmpty ? 'Strong' : names[_strength], style: AppTextStyles.label.c(AppColors.green500)),
         ]),
-        const SizedBox(height: 8),
+        AppGap.v8,
         ClipRRect(
-          borderRadius: BorderRadius.circular(9999),
+          borderRadius: AppRadius.pill,
           child: Row(children: [
             for (var i = 0; i < 4; i++) ...[
-              if (i > 0) const SizedBox(width: 4),
+              if (i > 0) AppGap.h4,
               Expanded(child: Container(height: 6, color: i < lit ? segColors[i] : AppColors.divider)),
             ],
           ]),
         ),
-        const SizedBox(height: 24),
+        AppGap.v24,
         _label('CONFIRM NEW PASSWORD'),
-        const SizedBox(height: 8),
-        _field(_p2, 'Confirm new password', 'container_d3e0e10a', 31, _show2, () => setState(() => _show2 = !_show2)),
+        AppGap.v8,
+        _field(_p2, 'Confirm new password', 'container_d3e0e10a', 31),
         if (_p2.text.isNotEmpty && _p2.text != _p1.text)
           Padding(
             padding: const EdgeInsets.only(top: 6),
-            child: Align(alignment: Alignment.centerLeft, child: Text('Passwords do not match', style: ts(Ff.inter, 11, w500, AppColors.error))),
+            child: Align(alignment: Alignment.centerLeft, child: Text('Passwords do not match', style: ts(AppFonts.inter, 11, w500, AppColors.error))),
           ),
         const SizedBox(height: 8 + 24),
         AuthAction(
           label: 'Update Password',
           height: 42,
           arrow: false,
-          textStyle: ts(Ff.inter, 12, w500, Colors.white, lh: 16, ls: 0.6),
+          textStyle: AppTextStyles.label.c(AppColors.white),
           onTap: () => Navigator.of(context).pushNamed(AppRoutes.resetSuccess),
         ),
       ]),

@@ -22,18 +22,21 @@ abstract final class AppImages {
   static const String resetBg = '$_i/reset_bg.jpg';
   static const String aboutHero = '$_i/about_hero.jpg';
   static const String avatar = '$_i/avatar.jpg';
+  static const String duaHeader = '$_i/dua_header.jpg';
+  static const String virtuesHeader = '$_i/virtues_header.jpg';
 }
 
 abstract final class AppIcons {
   static const String _i = 'assets/icons';
   static const String logoFull = '$_i/logo_full.png';
   static const String logoIcon = '$_i/logo_icon.png';
-  static const String divider = '$_i/divider.png';
-  static const String kaaba = '$_i/ic_kaaba.png';
-  static const String dua = '$_i/ic_dua.png';
-  static const String prayer = '$_i/ic_prayer.png';
-  static const String award = '$_i/ic_award.png';
-  static const String compass = '$_i/compass.png';
+  static const String logoLockup = '$_i/logo_lockup.png';
+  static const String logoSmall = '$_i/logo_small.png';
+  static const String wordmark = '$_i/wordmark.png';
+  static const String compassDial = '$_i/compass_dial.png';
+  static const String prayerMosqueDeco = '$_i/prayer_mosque_deco.png';
+  static const String waveGold = '$_i/wave_gold.png';
+  static const String waveCream = '$_i/wave_cream.png';
+  static const String onb2PhoneFrame = '$_i/onb2_phone_frame.png';
   static const String verseBadge = '$_i/verse_badge.png';
-  static const String onb4Compare = '$_i/onb4_compare.png';
 }
