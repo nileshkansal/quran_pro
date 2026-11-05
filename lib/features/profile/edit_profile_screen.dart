@@ -69,6 +69,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Column(children: [
               SizedBox(
                 height: 38,
+                width: double.infinity,
                 child: Stack(alignment: Alignment.center, children: [
                   Text('Personal Information', style: ts(Ff.inter, 20, w700, AppColors.green800, lh: 28, ls: -0.2)),
                   Positioned(
