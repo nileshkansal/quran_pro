@@ -4,13 +4,25 @@ Built from **Quran Pro App UI Design V1** (Figma). Every frame is implemented as
 
 ## Getting started
 
-```bash
+**Windows 10/11** (Command Prompt or PowerShell):
+
+```bat
 cd quran_pro
-./setup.sh            # runs `flutter create .` to add android/ + ios/, then pub get + analyze
+setup.bat             :: runs `flutter create .` to add android\ + ios\, then pub get + analyze
 flutter run
 ```
 
-`setup.sh` only *adds* the missing platform folders. `lib/`, `assets/`, `pubspec.yaml` and `test/` are left as they are.
+**macOS / Linux:**
+
+```bash
+cd quran_pro
+./setup.sh
+flutter run
+```
+
+The setup script only *adds* the missing platform folders. `lib/`, `assets/`, `pubspec.yaml` and `test/` are left as they are.
+
+On Windows you can build and run the **Android** app (emulator or USB device). iOS builds need a Mac with Xcode. Use a Mac, or a cloud Mac CI such as Codemagic or GitHub Actions `macos` runners, when you get to the iOS release.
 
 ## Project structure
 
