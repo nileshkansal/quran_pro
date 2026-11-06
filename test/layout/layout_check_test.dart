@@ -27,6 +27,8 @@ const sizes = <String, Size>{
   '320x640': Size(320, 640), // small / display zoom "large"
   '360x640': Size(360, 640), // short 16:9 phone
   '360x800': Size(360, 800), // gesture navigation (no nav bar)
+  '393x873_edge': Size(393, 873), // Android 15/16 edge-to-edge, 3-button bar (POCO X8 Pro)
+  '393x873_gesture': Size(393, 873), // Android 15/16 edge-to-edge, gesture handle
   '384x832': Size(384, 832), // Samsung A-series
   '393x851': Size(393, 851), // Pixel 5 / Xiaomi
   '412x868': Size(412, 868), // Pixel 7/8
@@ -243,13 +245,15 @@ void main() {
 
   for (final entry in sizes.entries) {
     final size = entry.key;
-    final shots = size == '360x752';
+    final shots = size == '360x752' || size == '393x873_edge';
 
     Future<void> setView(WidgetTester tester) async {
       tester.view.devicePixelRatio = 3;
       tester.view.physicalSize = entry.value * 3;
-      tester.view.padding = const FakeViewPadding(top: 72);
-      tester.view.viewPadding = const FakeViewPadding(top: 72);
+      // Edge-to-edge: the system navigation bar overlays the bottom of the app.
+      final navBar = size.endsWith('_edge') ? 48.0 * 3 : (size.endsWith('_gesture') ? 24.0 * 3 : 0.0);
+      tester.view.padding = FakeViewPadding(top: 72, bottom: navBar);
+      tester.view.viewPadding = FakeViewPadding(top: 72, bottom: navBar);
       if (size.endsWith('font130')) tester.platformDispatcher.textScaleFactorTestValue = 1.3;
       if (size.endsWith('bold')) tester.platformDispatcher.accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(boldText: true);
       addTearDown(tester.view.reset);

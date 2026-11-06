@@ -7,11 +7,17 @@ import 'core/theme/theme.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // Same edge-to-edge behaviour on every Android version (Android 15+ forces it).
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: AppColors.transparent,
       statusBarIconBrightness: Brightness.dark,
       statusBarBrightness: Brightness.light,
+      // Dark system navigation buttons on the cream bar area (DesignScale).
+      systemNavigationBarColor: AppColors.cream,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarDividerColor: AppColors.transparent,
     ),
   );
   runApp(const QuranProApp());
