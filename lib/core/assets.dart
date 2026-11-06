@@ -23,7 +23,7 @@ abstract final class AppImages {
   static const String aboutHero = '$_i/about_hero.jpg';
   static const String avatar = '$_i/avatar.jpg';
   static const String duaHeader = '$_i/dua_header.jpg';
-  static const String virtuesHeader = '$_i/virtues_header.jpg';
+  static const String virtuesHeader = '$_i/virtues_header.png';
 }
 
 abstract final class AppIcons {

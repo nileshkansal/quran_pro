@@ -20,14 +20,13 @@ class OnboardingBar extends StatelessWidget {
       width: 358,
       height: 41.9,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        SizedBox(
-          width: 119.1,
-          child: Row(children: [
-            AppIcon.square(firstPage ? 'famicons_book_outline_4baf5e02' : 'famicons_book_outline_d97af45d', 20.4),
-            const SizedBox(width: 7.7),
-            Expanded(child: Text('Read. Understand.\nLive the Quran.', style: ts(AppFonts.inter, 10.3, w400, ink, lh: 17.1))),
-          ]),
-        ),
+        // Two fixed lines: never wraps, even where Flutter's Inter is a
+        // touch wider than Figma's 91px text box.
+        Row(mainAxisSize: MainAxisSize.min, children: [
+          AppIcon.square(firstPage ? 'famicons_book_outline_4baf5e02' : 'famicons_book_outline_d97af45d', 20.4),
+          const SizedBox(width: 7.7),
+          Text('Read. Understand.\nLive the Quran.', softWrap: false, style: ts(AppFonts.inter, 10.3, w400, ink, lh: 17.1)),
+        ]),
         PagerDots(count: 5, index: index, active: ink, inactive: firstPage ? AppColors.white : AppColors.grey15),
         AppButton(
           label: 'Next',

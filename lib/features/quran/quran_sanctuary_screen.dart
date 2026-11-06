@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show OverflowBoxFit;
 
 import '../../core/assets.dart';
 import '../../core/routes/app_routes.dart';
@@ -216,6 +217,7 @@ class SurahTile extends StatelessWidget {
                   height: 31,
                   child: OverflowBox(
                     maxHeight: 56,
+                    fit: OverflowBoxFit.deferToChild,
                     alignment: Alignment.centerRight,
                     child: Text(surah.arabic, textDirection: TextDirection.rtl, style: ts(AppFonts.amiri, 28, w400, AppColors.green800, lh: 56)),
                   ),

@@ -38,7 +38,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
+    final page = DecoratedBox(
       decoration: const BoxDecoration(
         gradient: AppColors.pageGradient,
       ),
@@ -126,5 +126,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         ),
       ]),
     );
+    // Standalone route has no Scaffold of its own (the tab lives in MainShell's).
+    return widget.standalone ? Scaffold(body: page) : page;
   }
 }

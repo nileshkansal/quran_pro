@@ -8,6 +8,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_pro/core/routes/app_routes.dart';
@@ -76,20 +77,69 @@ Future<void> settle(WidgetTester tester) async {
   await tester.pump(const Duration(milliseconds: 100));
 }
 
+final _loc = RegExp(r'lib/[\w/]+\.dart:\d+');
+
+String? _location(FlutterErrorDetails d) {
+  for (final n in d.informationCollector?.call() ?? const <DiagnosticsNode>[]) {
+    final m = _loc.firstMatch(n.toStringDeep());
+    if (m != null) return m.group(0);
+  }
+  return null;
+}
+
+/// Finds visible text that is clipped, truncated or wrapped onto more lines
+/// than the design's explicit line breaks allow.
+List<String> textProblems(WidgetTester tester) {
+  final out = <String>[];
+  final screen = tester.view.physicalSize / tester.view.devicePixelRatio;
+  for (final o in tester.allRenderObjects) {
+    if (o is! RenderParagraph || !o.hasSize || !o.attached) continue;
+    final text = o.text.toPlainText();
+    if (text.trim().isEmpty) continue;
+    Offset pos;
+    try {
+      pos = o.localToGlobal(Offset.zero);
+    } catch (_) {
+      continue;
+    }
+    if (pos.dy > screen.height || pos.dy + o.size.height < 0 || pos.dx > screen.width) continue;
+    final label = text.replaceAll('\n', '⏎');
+    final short = label.length > 50 ? '${label.substring(0, 50)}…' : label;
+    final lines = o.computeLineMetrics();
+    final expected = '\n'.allMatches(text).length + 1;
+    if (o.didExceedMaxLines) {
+      out.add('TEXT truncated: «$short»');
+      continue;
+    }
+    if (lines.isNotEmpty) {
+      final last = lines.last;
+      final textH = last.baseline + last.descent;
+      if (textH > o.size.height + 1.5) {
+        out.add('TEXT clipped (needs ${textH.toStringAsFixed(1)}, has ${o.size.height.toStringAsFixed(1)}): «$short»');
+        continue;
+      }
+    }
+    if (text.contains('\n') && lines.length > expected) {
+      out.add('TEXT wraps into ${lines.length} lines (design $expected): «$short» width ${o.size.width.toStringAsFixed(1)}');
+    } else if (!text.contains('\n') && text.length <= 24 && lines.length > 1 && o.maxLines == null) {
+      out.add('TEXT label wraps into ${lines.length} lines: «$short» width ${o.size.width.toStringAsFixed(1)}');
+    }
+  }
+  return out;
+}
+
 /// Runs [body] while collecting Flutter errors, then writes them to the report.
 Future<void> check(WidgetTester tester, String sizeName, String name, Future<void> Function() body, {bool shot = true}) async {
   final errors = <String>[];
   final old = FlutterError.onError;
   FlutterError.onError = (d) {
     final msg = d.exceptionAsString().split('\n').first;
-    final where = d.informationCollector?.call().map((e) => e.toString()).firstWhere(
-          (s) => s.contains('lib/'),
-          orElse: () => '',
-        );
-    errors.add('$msg${where == null || where.isEmpty ? '' : '\n    ${where.split('\n').first.trim()}'}');
+    final where = _location(d);
+    errors.add(where == null ? msg : '$msg  ($where)');
   };
   try {
     await body();
+    errors.addAll(textProblems(tester));
     if (shot) {
       await expectLater(find.byKey(shotKey), matchesGoldenFile('shots/$sizeName/$name.png'));
     }
@@ -103,8 +153,20 @@ Future<void> check(WidgetTester tester, String sizeName, String name, Future<voi
   final unique = errors.toSet().toList();
   report.writeln(unique.isEmpty ? '- ✅ `$name`' : '- ❌ `$name`');
   for (final e in unique) {
-    report.writeln('  - ${e.replaceAll('\n', '\n  ')}');
+    report.writeln('  - $e');
   }
+}
+
+/// Pumps without reporting (errors are reported by the screen's own check).
+Future<void> quiet(WidgetTester tester, Future<void> Function() body) async {
+  final old = FlutterError.onError;
+  FlutterError.onError = (_) {};
+  try {
+    await body();
+  } finally {
+    FlutterError.onError = old;
+  }
+  tester.takeException();
 }
 
 Future<void> scrollShots(WidgetTester tester, String size, String name) async {
@@ -232,8 +294,10 @@ void main() {
         testWidgets(m.key, (tester) async {
           await setView(tester);
           mainTabIndex.value = 0;
-          await tester.pumpWidget(app(AppRoutes.home));
-          await settle(tester);
+          await quiet(tester, () async {
+            await tester.pumpWidget(app(AppRoutes.home));
+            await settle(tester);
+          });
           await check(tester, size, m.key, () async {
             m.value(navKey.currentContext!);
             await tester.pump(const Duration(milliseconds: 500));

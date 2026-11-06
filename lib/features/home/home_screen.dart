@@ -171,8 +171,7 @@ class _DailyTargetCard extends StatelessWidget {
                 ),
                 Expanded(
                   child: SizedBox(
-                    height: 76.6,
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
                       SizedBox(
                         width: 152,
                         height: 32,
@@ -254,8 +253,10 @@ class _ReadOption extends StatelessWidget {
         onTap: onTap,
         child: SizedBox(
           height: 179.5,
+          // Figma's 134px title box is wider than the 126px padded area, so
+          // the side padding is reduced to keep "in Translation" on one line.
           child: Padding(
-            padding: AppInsets.all20,
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl, horizontal: AppSpacing.md),
             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               const AppIcon('overlay_e67e4c0d', w: 48, h: 48),
               AppGap.v16,

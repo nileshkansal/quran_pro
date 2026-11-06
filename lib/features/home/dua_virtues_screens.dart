@@ -283,21 +283,28 @@ class _VirtuesScreenState extends State<VirtuesScreen> {
           Padding(
             padding: AppInsets.h16,
             child: Column(children: [
+              // Figma row overflows (126 + 256 > 354): the transparent mosque
+              // art bleeds off the right edge behind the title.
               SizedBox(
                 height: 113,
-                child: Row(children: [
-                  Expanded(
-                    child: Padding(
-                      padding: AppInsets.v8,
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                        Text('Virtues of Deeds', maxLines: 1, softWrap: false, overflow: TextOverflow.visible,
-                            style: ts(AppFonts.inter, 20, w700, AppColors.emerald900, lh: 32, ls: -0.6)),
-                        AppGap.v2,
-                        Text('Small deeds. \nGreat rewards.', style: AppTextStyles.jakartaCaption.c(AppColors.grey58)),
-                      ]),
-                    ),
+                child: Stack(clipBehavior: Clip.none, children: [
+                  Positioned(
+                    right: -AppSpacing.lg,
+                    top: 0,
+                    width: 256,
+                    height: 113,
+                    child: Image.asset(AppImages.virtuesHeader, fit: BoxFit.contain, alignment: Alignment.centerRight),
                   ),
-                  SizedBox(width: 256, height: 113, child: Image.asset(AppImages.virtuesHeader, fit: BoxFit.cover)),
+                  Positioned(
+                    left: 2,
+                    top: 0,
+                    bottom: 0,
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text('Virtues of Deeds', maxLines: 1, softWrap: false, style: ts(AppFonts.inter, 20, w700, AppColors.emerald900, lh: 32, ls: -0.6)),
+                      AppGap.v2,
+                      Text('Small deeds. \nGreat rewards.', style: AppTextStyles.jakartaCaption.c(AppColors.grey58)),
+                    ]),
+                  ),
                 ]),
               ),
               AppGap.v30,
