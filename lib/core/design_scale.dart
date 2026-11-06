@@ -11,7 +11,7 @@ import '../core/theme/theme.dart';
 ///   tablets, where the phone-width canvas is centred instead).
 /// * `MediaQuery` size, paddings and insets are converted into design units
 ///   so SafeArea, keyboard insets and bottom sheets keep working.
-/// * System font scaling is disabled: with a pixel-perfect canvas a larger
+/// * System font scaling and the accessibility "bold text" setting are disabled: with a pixel-perfect canvas a larger
 ///   system font would overflow fixed Figma boxes. Quran text size is
 ///   controlled in-app (Reading Settings → Font Size).
 class DesignScale extends StatelessWidget {
@@ -49,6 +49,9 @@ class DesignScale extends StatelessWidget {
       viewInsets: s(mq.viewInsets),
       systemGestureInsets: s(mq.systemGestureInsets),
       textScaler: TextScaler.noScaling,
+      // Android/Samsung "Bold font" makes every Text bold (wider) and would
+      // overflow the fixed Figma boxes, like a larger system font.
+      boldText: false,
     );
 
     return ColoredBox(

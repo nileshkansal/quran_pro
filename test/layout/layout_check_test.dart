@@ -23,6 +23,7 @@ import 'package:quran_pro/widgets/widgets.dart';
 const sizes = <String, Size>{
   '360x752': Size(360, 752), // Samsung 1080×2400 @3x with 3-button nav (screenshots)
   '360x752_font130': Size(360, 752), // same, system font size 130 %
+  '360x752_bold': Size(360, 752), // same, accessibility "Bold font" on
   '320x640': Size(320, 640), // small / display zoom "large"
   '360x640': Size(360, 640), // short 16:9 phone
   '360x800': Size(360, 800), // gesture navigation (no nav bar)
@@ -250,8 +251,10 @@ void main() {
       tester.view.padding = const FakeViewPadding(top: 72);
       tester.view.viewPadding = const FakeViewPadding(top: 72);
       if (size.endsWith('font130')) tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+      if (size.endsWith('bold')) tester.platformDispatcher.accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(boldText: true);
       addTearDown(tester.view.reset);
       addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
     }
 
     Future<void> finish(WidgetTester tester) async {
