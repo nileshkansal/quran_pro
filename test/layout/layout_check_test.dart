@@ -105,7 +105,19 @@ List<String> textProblems(WidgetTester tester) {
     if (pos.dy > screen.height || pos.dy + o.size.height < 0 || pos.dx > screen.width) continue;
     final label = text.replaceAll('\n', '⏎');
     final short = label.length > 50 ? '${label.substring(0, 50)}…' : label;
-    final lines = o.computeLineMetrics();
+    final painter = TextPainter(
+      text: o.text,
+      textAlign: o.textAlign,
+      textDirection: o.textDirection,
+      textScaler: o.textScaler,
+      maxLines: o.maxLines,
+      locale: o.locale,
+      strutStyle: o.strutStyle,
+      textWidthBasis: o.textWidthBasis,
+      textHeightBehavior: o.textHeightBehavior,
+    )..layout(maxWidth: o.size.width);
+    final lines = painter.computeLineMetrics();
+    painter.dispose();
     final expected = '\n'.allMatches(text).length + 1;
     if (o.didExceedMaxLines) {
       out.add('TEXT truncated: «$short»');

@@ -290,7 +290,9 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
   Widget _notifRow(bool green) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Row(children: [
+          // Figma's two groups are 4.8px wider than the row; scale down a
+          // touch instead of overflowing.
+          Flexible(child: FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Row(children: [
             Container(
               width: 10,
               height: 10,
@@ -298,8 +300,9 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
             ),
             AppGap.h8,
             Text('Notifications are ON', style: AppTextStyles.bodyMedium),
-          ]),
-          GestureDetector(
+          ]))),
+          AppGap.h8,
+          Flexible(child: FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerRight, child: GestureDetector(
             onTap: () {
               mainTabIndex.value = 2;
               Navigator.of(context).popUntil((r) => r.isFirst);
@@ -311,7 +314,7 @@ class _PrayerTimesSheetState extends State<_PrayerTimesSheet> {
                   ? Text('Adjust in Settings', style: AppTextStyles.bodyMedium.c(AppColors.green500))
                   : GradientText('Adjust in Settings', style: AppTextStyles.bodyMedium.c(AppColors.white), gradient: AppColors.goldGradient),
             ]),
-          ),
+          ))),
         ]),
       );
 
