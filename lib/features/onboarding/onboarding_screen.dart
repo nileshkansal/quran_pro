@@ -385,9 +385,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(width: 9.3),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-              Text(a, maxLines: 1, style: ts(AppFonts.inter, 11.8, w600, AppColors.pureBlack, lh: 11)),
+              // Figma's text boxes are wider than their column; let them run over.
+              Text(a, softWrap: false, overflow: TextOverflow.visible, style: ts(AppFonts.inter, 11.8, w600, AppColors.pureBlack, lh: 11)),
               const SizedBox(height: 4.2),
-              Text(b, maxLines: 1, style: ts(AppFonts.inter, 10.1, w500, AppColors.pureBlack, lh: 11)),
+              Text(b, softWrap: false, overflow: TextOverflow.visible, style: ts(AppFonts.inter, 10.1, w500, AppColors.pureBlack, lh: 11)),
             ]),
           ),
         ]),
@@ -400,7 +401,8 @@ class _CompareTable extends StatelessWidget {
 
   static final _gold = ts(AppFonts.inter, 12, w500, AppColors.white, lh: 13);
 
-  Widget _goldText(String s, TextStyle st) => GradientText(s, style: st, gradient: AppColors.goldGradient, textAlign: TextAlign.center);
+  // Single line: Figma's price boxes (58px) are narrower than "₹649/month".
+  Widget _goldText(String s, TextStyle st) => GradientText(s, style: st, gradient: AppColors.goldGradient, textAlign: TextAlign.center, softWrap: false);
 
   Widget _tick() => const AppIcon('teenyicons_tick_circle_solid_b1bcd1f5', w: 15, h: 15);
   Widget _dash() => SizedBox(

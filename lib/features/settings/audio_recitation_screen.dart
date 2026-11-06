@@ -293,7 +293,7 @@ class _AudioRecitationScreenState extends State<AudioRecitationScreen> {
             height: 40,
             alignment: Alignment.center,
             decoration: BoxDecoration(color: tile.$1, border: Border.all(color: tile.$2), borderRadius: AppRadius.br12),
-            child: Text(r.arabicMark, textDirection: TextDirection.rtl, softWrap: false, style: ts(AppFonts.amiri, 18, w700, tile.$3, lh: 28)),
+            child: Text(r.arabicMark, textDirection: TextDirection.rtl, softWrap: false, overflow: TextOverflow.visible, style: ts(AppFonts.amiri, 18, w700, tile.$3, lh: 28)),
           ),
           const SizedBox(width: 11),
           Expanded(

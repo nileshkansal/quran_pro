@@ -142,11 +142,9 @@ class _QiblaSheetState extends State<_QiblaSheet> with SingleTickerProviderState
           child: Container(
             height: 60.1,
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              border: Border.all(color: AppColors.stone200.o(.8)),
-              borderRadius: AppRadius.br12,
-            ),
+            decoration: const BoxDecoration(color: AppColors.surface, borderRadius: AppRadius.br12),
+            // Inside stroke: drawn on top so it doesn't eat into the 36px content.
+            foregroundDecoration: BoxDecoration(border: Border.all(color: AppColors.stone200.o(.8)), borderRadius: AppRadius.br12),
             child: Row(children: [
               const AppIcon('background_border_f0bdce72', w: 32, h: 32),
               AppGap.h12,

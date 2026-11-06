@@ -83,8 +83,9 @@ class SuccessScreen extends StatelessWidget {
   Widget _card({required Color fill, required String icon, required Widget child}) => Container(
         height: 87.2,
         padding: const EdgeInsets.all(15.1),
-        decoration: BoxDecoration(
-          color: fill,
+        decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(20.8)),
+        // Figma inside stroke: drawn on top so it doesn't shrink the content.
+        foregroundDecoration: BoxDecoration(
           border: Border.all(color: AppColors.gold19, width: 1.1),
           borderRadius: BorderRadius.circular(20.8),
         ),

@@ -46,7 +46,12 @@ class DailyReadingScreen extends StatelessWidget {
                   AppGap.h12,
                   Expanded(
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text('Wahoo! You have completed your daily goal! ', maxLines: 1, style: ts(AppFonts.inter, 12, w700, AppColors.textPrimary, lh: 24)),
+                      // Figma uses Satoshi (narrower than the bundled Inter); shrink to fit.
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text('Wahoo! You have completed your daily goal!', style: ts(AppFonts.inter, 12, w700, AppColors.textPrimary, lh: 24)),
+                      ),
                       Text('Keep it up! Consistency is the key.', style: AppTextStyles.caption),
                     ]),
                   ),

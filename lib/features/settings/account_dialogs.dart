@@ -18,6 +18,7 @@ Future<void> showLogoutDialog(BuildContext context) => showAppModal(
           icon: const AppIcon.square('container_f7f3a61d', 26.7),
           title: 'Are you sure\nyou want to log out?',
           titleStyle: ts(AppFonts.inter, 32, w600, AppColors.textPrimary, lh: 40),
+          titleMaxWidth: 329,
           titleGap: AppSpacing.md + AppSpacing.xl,
           message: 'Your progress and reflections\nwill be saved for your next\nvisit.',
           messageStyle: AppTextStyles.lead,

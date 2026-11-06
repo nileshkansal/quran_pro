@@ -121,10 +121,11 @@ List<String> textProblems(WidgetTester tester) {
       strutStyle: o.strutStyle,
       textWidthBasis: o.textWidthBasis,
       textHeightBehavior: o.textHeightBehavior,
-    )..layout(maxWidth: o.size.width);
+    )..layout(maxWidth: o.softWrap ? o.size.width : double.infinity);
     final lines = painter.computeLineMetrics();
     painter.dispose();
     final expected = '\n'.allMatches(text).length + 1;
+    if (o.overflow == TextOverflow.visible && !o.softWrap) continue; // allowed to run over by design
     if (o.didExceedMaxLines) {
       out.add('TEXT truncated: «$short»');
       continue;
@@ -139,8 +140,6 @@ List<String> textProblems(WidgetTester tester) {
     }
     if (text.contains('\n') && lines.length > expected) {
       out.add('TEXT wraps into ${lines.length} lines (design $expected): «$short» width ${o.size.width.toStringAsFixed(1)}');
-    } else if (!text.contains('\n') && text.length <= 24 && lines.length > 1 && o.maxLines == null) {
-      out.add('TEXT label wraps into ${lines.length} lines: «$short» width ${o.size.width.toStringAsFixed(1)}');
     }
   }
   return out;

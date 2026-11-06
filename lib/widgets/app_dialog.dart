@@ -1,6 +1,7 @@
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show OverflowBoxFit;
 
 import '../core/theme/theme.dart';
 import 'app_button.dart';
@@ -111,6 +112,7 @@ class AppAlertDialog extends StatelessWidget {
     this.titleGap = AppSpacing.md,
     this.actionsGap = AppSpacing.huge,
     this.border,
+    this.titleMaxWidth,
   });
 
   final String title;
@@ -128,8 +130,14 @@ class AppAlertDialog extends StatelessWidget {
   final double actionsGap;
   final Color? border;
 
+  /// Lets the title run wider than the padded content (Figma's Log Out title
+  /// box is 329px inside a 282px content area).
+  final double? titleMaxWidth;
+
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) {
+    final titleText = Text(title, textAlign: TextAlign.center, style: titleStyle ?? AppTextStyles.title.c(AppColors.textPrimary));
+    return Container(
         width: width,
         height: height,
         padding: padding,
@@ -140,13 +148,20 @@ class AppAlertDialog extends StatelessWidget {
         ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           if (icon != null) ...[DialogIconDisc(icon: icon!), AppGap.v24],
-          Text(title, textAlign: TextAlign.center, style: titleStyle ?? AppTextStyles.title.c(AppColors.textPrimary)),
+          if (titleMaxWidth == null)
+            titleText
+          else
+            SizedBox(
+              width: double.infinity,
+              child: OverflowBox(minWidth: 0, maxWidth: titleMaxWidth, fit: OverflowBoxFit.deferToChild, child: titleText),
+            ),
           SizedBox(height: titleGap),
           Text(message, textAlign: TextAlign.center, style: messageStyle ?? AppTextStyles.body),
           if (height != null) const Spacer() else SizedBox(height: actionsGap),
           for (var i = 0; i < actions.length; i++) ...[if (i > 0) AppGap.v12, actions[i]],
         ]),
       );
+  }
 }
 
 /// One-call confirmation dialog. Resolves to `true` when confirmed.

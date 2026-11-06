@@ -88,7 +88,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                       AppGap.v4,
                       Text('Let\'s get to know you better',
                           textAlign: TextAlign.center, style: AppTextStyles.body),
-                      AppGap.v32,
+                      AppGap.v24,
                       const OrnamentDivider(icon: 'margin_c8bdf5c5'),
                     ]),
                   ),

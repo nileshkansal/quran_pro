@@ -29,16 +29,19 @@ class AppIcon extends StatelessWidget {
 
 /// Text painted with a gradient (Figma text filled with the gold gradient).
 class GradientText extends StatelessWidget {
-  const GradientText(this.text, {super.key, required this.style, required this.gradient, this.textAlign});
+  const GradientText(this.text, {super.key, required this.style, required this.gradient, this.textAlign, this.softWrap = true});
   final String text;
   final TextStyle style;
   final Gradient gradient;
   final TextAlign? textAlign;
 
+  /// `false` keeps the text on one line even if it is wider than its box.
+  final bool softWrap;
+
   @override
   Widget build(BuildContext context) => ShaderMask(
         blendMode: BlendMode.srcIn,
         shaderCallback: (r) => gradient.createShader(Offset.zero & r.size),
-        child: Text(text, style: style, textAlign: textAlign),
+        child: Text(text, style: style, textAlign: textAlign, softWrap: softWrap, overflow: softWrap ? null : TextOverflow.visible),
       );
 }

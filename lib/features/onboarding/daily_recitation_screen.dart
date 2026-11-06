@@ -118,7 +118,7 @@ class _DailyRecitationScreenState extends State<DailyRecitationScreen> {
                     left: 10,
                     top: 10,
                     width: 259,
-                    height: 58,
+                    height: 59, // Figma box is 58 but its 3 Poppins lines need 39 + 20
                     child: Row(children: [
                       const AppIcon('favourite_circle_0365a659', w: 44, h: 44),
                       const SizedBox(width: 9),
