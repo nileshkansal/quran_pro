@@ -30,6 +30,9 @@ TextStyle ts(
     fontStyle: style,
     decoration: decoration,
     leadingDistribution: TextLeadingDistribution.even,
+    // Latin UI fonts have no Arabic glyphs: Arabic words inside them
+    // (e.g. reciter names) fall back to Amiri instead of a system font.
+    fontFamilyFallback: const [AppFonts.amiri],
   );
 }
 

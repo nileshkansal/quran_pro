@@ -401,8 +401,11 @@ class _CompareTable extends StatelessWidget {
 
   static final _gold = ts(AppFonts.inter, 12, w500, AppColors.white, lh: 13);
 
-  // Single line: Figma's price boxes (58px) are narrower than "₹649/month".
   Widget _goldText(String s, TextStyle st) => GradientText(s, style: st, gradient: AppColors.goldGradient, textAlign: TextAlign.center, softWrap: false);
+
+  /// Price label. Figma's 58px box clips "₹649/month" ("₹649/mont"), so the
+  /// label is scaled down just enough to show in full on one line.
+  Widget _price(String s) => FittedBox(fit: BoxFit.scaleDown, child: _goldText(s, _gold));
 
   Widget _tick() => const AppIcon('teenyicons_tick_circle_solid_b1bcd1f5', w: 15, h: 15);
   Widget _dash() => SizedBox(
@@ -467,13 +470,13 @@ class _CompareTable extends StatelessWidget {
                 _goldText('Netflix', ts(AppFonts.inter, 11.2, w400, AppColors.white, lh: 12.2)),
               ]),
             ),
-            _goldText('₹649/month', _gold),
+            _price('₹649/month'),
             _tick(), _tick(), _dash(), _dash(),
           ]),
           AppGap.h10,
           _col(width: 57, gap: 33, children: [
             const AppIcon('selfhst_amazon_prime_4640a26e', w: 43.1, h: 43.1),
-            _goldText('₹299/month', _gold),
+            _price('₹299/month'),
             _tick(), _tick(), _dash(), _dash(),
           ]),
           AppGap.h10,
@@ -486,7 +489,7 @@ class _CompareTable extends StatelessWidget {
                 _goldText('Spotify', ts(AppFonts.inter, 14.8, w400, AppColors.white, lh: 16)),
               ]),
             ),
-            _goldText('₹199/month', _gold),
+            _price('₹199/month'),
             _tick(), _tick(), _tick(), _dash(),
           ]),
         ]),
