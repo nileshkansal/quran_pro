@@ -21,8 +21,15 @@ import 'package:quran_pro/widgets/widgets.dart';
 
 /// Logical screen sizes to check (width, height incl. status bar).
 const sizes = <String, Size>{
-  '360x752': Size(360, 752), // Samsung 1080×2400 @3x with 3-button nav
+  '360x752': Size(360, 752), // Samsung 1080×2400 @3x with 3-button nav (screenshots)
+  '360x752_font130': Size(360, 752), // same, system font size 130 %
+  '320x640': Size(320, 640), // small / display zoom "large"
+  '360x640': Size(360, 640), // short 16:9 phone
+  '360x800': Size(360, 800), // gesture navigation (no nav bar)
+  '384x832': Size(384, 832), // Samsung A-series
+  '393x851': Size(393, 851), // Pixel 5 / Xiaomi
   '412x868': Size(412, 868), // Pixel 7/8
+  '430x932': Size(430, 932), // large phones
 };
 
 final report = StringBuffer();
@@ -186,7 +193,7 @@ Future<void> quiet(WidgetTester tester, Future<void> Function() body) async {
   tester.takeException();
 }
 
-Future<void> scrollShots(WidgetTester tester, String size, String name) async {
+Future<void> scrollShots(WidgetTester tester, String size, String name, {bool shot = true}) async {
   final scrollables = find.byType(Scrollable).evaluate().toList();
   if (scrollables.isEmpty) return;
   // Biggest vertical scrollable.
@@ -210,7 +217,7 @@ Future<void> scrollShots(WidgetTester tester, String size, String name) async {
     await check(tester, size, '${name}_$i', () async {
       pos.jumpTo((pos.pixels + 500).clamp(0, pos.maxScrollExtent));
       await settle(tester);
-    });
+    }, shot: shot);
   }
 }
 
@@ -242,7 +249,9 @@ void main() {
       tester.view.physicalSize = entry.value * 3;
       tester.view.padding = const FakeViewPadding(top: 72);
       tester.view.viewPadding = const FakeViewPadding(top: 72);
+      if (size.endsWith('font130')) tester.platformDispatcher.textScaleFactorTestValue = 1.3;
       addTearDown(tester.view.reset);
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     }
 
     Future<void> finish(WidgetTester tester) async {
@@ -261,10 +270,40 @@ void main() {
             await tester.pumpWidget(app(r));
             await settle(tester);
           }, shot: shots);
-          if (shots) await scrollShots(tester, size, name);
+          await scrollShots(tester, size, name, shot: shots);
           await finish(tester);
         });
       }
+
+      testWidgets('quran juz tab', (tester) async {
+        await setView(tester);
+        await check(tester, size, 'quran_juz', () async {
+          await tester.pumpWidget(app(AppRoutes.sanctuary));
+          await settle(tester);
+          await tester.tap(find.text('Juz').first, warnIfMissed: false);
+          await settle(tester);
+        }, shot: shots);
+        await scrollShots(tester, size, 'quran_juz', shot: shots);
+        await finish(tester);
+      });
+
+      testWidgets('prayer calendar', (tester) async {
+        await setView(tester);
+        mainTabIndex.value = 0;
+        await quiet(tester, () async {
+          await tester.pumpWidget(app(AppRoutes.home));
+          await settle(tester);
+        });
+        await check(tester, size, 'sheet_prayer_calendar', () async {
+          showPrayerTimesSheet(navKey.currentContext!);
+          await tester.pump(const Duration(milliseconds: 500));
+          await settle(tester);
+          await tester.tap(find.textContaining(' AH').first, warnIfMissed: false);
+          await settle(tester);
+        }, shot: shots);
+        await scrollShots(tester, size, 'sheet_prayer_calendar', shot: shots);
+        await finish(tester);
+      });
 
       testWidgets('onboarding pages', (tester) async {
         await setView(tester);
@@ -291,7 +330,7 @@ void main() {
             await tester.pumpWidget(app(AppRoutes.home));
             await settle(tester);
           }, shot: shots);
-          if (shots) await scrollShots(tester, size, name);
+          await scrollShots(tester, size, name, shot: shots);
           mainTabIndex.value = 0;
           await finish(tester);
         });
@@ -320,7 +359,7 @@ void main() {
             await tester.pump(const Duration(milliseconds: 500));
             await settle(tester);
           }, shot: shots);
-          if (shots) await scrollShots(tester, size, m.key);
+          await scrollShots(tester, size, m.key, shot: shots);
           await finish(tester);
         });
       }
