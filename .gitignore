@@ -17,3 +17,7 @@ pubspec.lock.bak
 **/android/.gradle/
 **/android/local.properties
 .DS_Store
+
+# Layout check screenshots are published to the layout-results branch
+test/layout/shots/
+test/layout/report.md

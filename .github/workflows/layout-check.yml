@@ -1,0 +1,41 @@
+name: Layout check
+
+# Renders every screen at real phone sizes, reports overflows and saves
+# screenshots. Results are pushed to the `layout-results` branch.
+on:
+  push:
+    branches: [main, layout-check]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.8
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos | tee analyze.txt || true
+      - name: Render screens
+        run: flutter test test/layout --update-goldens -r expanded 2>&1 | tail -200 > test-log.txt || true
+      - name: Publish results
+        run: |
+          mkdir -p /tmp/out
+          cp -r test/layout/shots /tmp/out/ 2>/dev/null || true
+          cp test/layout/report.md analyze.txt test-log.txt /tmp/out/ 2>/dev/null || true
+          echo "${GITHUB_SHA}" > /tmp/out/commit.txt
+          cd /tmp/out
+          git init -q -b layout-results
+          git config user.name "layout-bot"
+          git config user.email "layout-bot@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Layout results for ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" layout-results
