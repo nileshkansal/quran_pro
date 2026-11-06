@@ -83,10 +83,23 @@ import '../../widgets/widgets.dart';    // components
 ```
 
 - **Colours** — only `AppColors.*` (no `Color(0x…)` or `Colors.*` in screens). Transparency: `AppColors.outline.o(.3)`.
-- **Fonts / text** — `AppTextStyles.*` first (`AppTextStyles.title`, `.body`, `.label`…), recolour with `.c(color)`. Use `ts(AppFonts.x, size, weight, color, lh:, ls:)` only for a one-off Figma style.
+- **Fonts / text** — the theme's Material type geometry is neutral (no extra letter spacing or line height), so a Figma style renders exactly as specified. Use `AppTextStyles.*` first (`AppTextStyles.title`, `.body`, `.label`…), recolour with `.c(color)`. Use `ts(AppFonts.x, size, weight, color, lh:, ls:)` only for a one-off Figma style.
 - **Spacing / radius / sizes** — `AppGap.v16`, `AppInsets.all24`, `AppRadius.br12`, `AppSizes.buttonHeight`, `AppShadows.md`. Odd Figma positions (e.g. 53.8) stay as literal numbers because they belong to one frame only.
 - **Components** — buttons, fields, switches, dialogs, sheets, snackbars, cards and headers come from `widgets/`. Need a variation? Add a parameter to the component instead of building it inline.
 - **Logic helpers** — `Validators` (e-mail, password strength) and `Formatters` (initials, Arabic digits, month/year).
+
+## Layout check (CI)
+
+`test/layout/layout_check_test.dart` renders every screen, tab, sheet and dialog with the bundled fonts at 360 × 752 (a 1080 × 2400 Android phone) and 412 × 868. It reports:
+
+- every Flutter layout error (RenderFlex overflow, infinite size, missing Material…)
+- text that is clipped, truncated or wraps onto more lines than the design's line breaks
+
+It runs automatically on every push to `main` (GitHub Actions → *Layout check*). The report (`report.md`) and screenshots of every screen are published to the **`layout-results`** branch. Run it locally with:
+
+```bash
+flutter test test/layout --update-goldens   # writes test/layout/report.md + shots/
+```
 
 ## Click flow
 
