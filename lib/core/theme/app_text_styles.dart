@@ -25,7 +25,8 @@ TextStyle ts(
     fontWeight: weight,
     color: color,
     height: lh == null ? null : lh / size,
-    letterSpacing: ls ?? (lsPct == null ? null : size * lsPct / 100),
+    // Always explicit so nothing is inherited from the Material theme.
+    letterSpacing: ls ?? (lsPct == null ? 0 : size * lsPct / 100),
     fontStyle: style,
     decoration: decoration,
     leadingDistribution: TextLeadingDistribution.even,

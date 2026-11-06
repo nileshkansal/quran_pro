@@ -25,7 +25,7 @@ jobs:
       - name: Analyze
         run: flutter analyze --no-fatal-infos | tee analyze.txt || true
       - name: Render screens
-        run: flutter test test/layout --update-goldens -r expanded 2>&1 | tail -200 > test-log.txt || true
+        run: flutter test test/layout --update-goldens -r expanded > test-log.txt 2>&1 || true
       - name: Publish results
         run: |
           mkdir -p /tmp/out

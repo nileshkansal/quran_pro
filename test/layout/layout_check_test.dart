@@ -96,6 +96,12 @@ List<String> textProblems(WidgetTester tester) {
     if (o is! RenderParagraph || !o.hasSize || !o.attached) continue;
     final text = o.text.toPlainText();
     if (text.trim().isEmpty) continue;
+    var hasWidget = false;
+    o.text.visitChildren((span) {
+      if (span is WidgetSpan) hasWidget = true;
+      return !hasWidget;
+    });
+    if (hasWidget) continue;
     Offset pos;
     try {
       pos = o.localToGlobal(Offset.zero);

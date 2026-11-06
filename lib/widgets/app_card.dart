@@ -31,7 +31,13 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final card = Container(padding: padding, decoration: AppDecorations.card(radius: radius, border: border), child: child);
+    final br = BorderRadius.circular(radius);
+    final card = Container(
+      padding: padding,
+      decoration: AppDecorations.card(radius: radius),
+      foregroundDecoration: border == null ? null : BoxDecoration(border: Border.all(color: border!), borderRadius: br),
+      child: child,
+    );
     return onTap == null ? card : GestureDetector(onTap: onTap, child: card);
   }
 }
@@ -48,9 +54,12 @@ class GlassCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final br = BorderRadius.circular(radius);
+    // Border drawn as a foreground so it doesn't shrink the content
+    // (Figma strokes sit inside the frame without affecting layout).
     final card = Container(
       height: height,
-      decoration: BoxDecoration(color: AppColors.white.o(.7), border: Border.all(color: AppColors.white.o(.5)), borderRadius: br),
+      decoration: BoxDecoration(color: AppColors.white.o(.7), borderRadius: br),
+      foregroundDecoration: BoxDecoration(border: Border.all(color: AppColors.white.o(.5)), borderRadius: br),
       child: Material(type: MaterialType.transparency, child: child),
     );
     return ClipRRect(
